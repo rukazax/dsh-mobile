@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DSH Mobile</string>
+
+    <string name="pairing_title">Подключение к ПК</string>
+    <string name="pairing_heading">Подключение к ПК</string>
+    <string name="pairing_subtitle">Введите адрес DSH в локальной сети и 8-символьный код подключения, который показан на ПК.</string>
+    <string name="pairing_server_label">Адрес ПК</string>
+    <string name="pairing_server_hint">http://192.168.1.10:3081</string>
+    <string name="pairing_code_label">Код подключения (8 символов, необязательно)</string>
+    <string name="pairing_code_hint">ABCD1234</string>
+    <string name="pairing_connect">Подключить</string>
+    <string name="pairing_offline">Открыть встроенную копию (офлайн)</string>
+    <string name="pairing_checking">Проверка подключения к ПК…</string>
+    <string name="pairing_help">Адрес и код показаны на ПК: http://127.0.0.1:ПОРТ/m/pair. Если порт не указан, используется 3081.</string>
+    <string name="pairing_cleartext_note">В локальной сети используется HTTP, трафик не шифруется. Если на ПК настроен сертификат, лучше использовать HTTPS.</string>
+
+    <string name="pair_error_empty_server">Сначала укажите адрес ПК.</string>
+    <string name="pair_error_code_length">Код подключения должен состоять ровно из 8 символов или быть пустым.</string>
+    <string name="pair_error_bad_scheme">Поддерживаются только адреса http:// и https://.</string>
+    <string name="pair_error_bad_host">Не удалось разобрать адрес. Пример: http://192.168.1.10:3081</string>
+    <string name="pair_error_bad_port">Порт должен быть в диапазоне от 1 до 65535.</string>
+    <string name="pair_error_http">ПК ответил кодом HTTP %1$d. Проверьте, что мобильный плагин DSH включён и слушает порт.</string>
+    <string name="pair_error_network">ПК недоступен. Проверьте Wi-Fi, адрес и что DSH запущен на ПК.</string>
+    <string name="pair_error_invalid_response">Ответ ПК не похож на приветствие DSH Mobile.</string>
+    <string name="pair_error_unsupported">Неподдерживаемая версия протокола (%1$s). Обновите DSH Mobile или плагин DSH.</string>
+    <string name="pair_error_unknown">Неизвестная ошибка при проверке ПК.</string>
+
+    <string name="offline_not_available">Встроенная копия недоступна. Запустите android/scripts/sync-web.ps1 и пересоберите APK либо подключитесь к ПК.</string>
+    <string name="warning_cleartext">Незашифрованный канал HTTP: другие устройства в локальной сети могут читать этот трафик.</string>
+    <string name="warning_cleartext_action">Скрыть</string>
+    <string name="offline_chip">Встроенная копия: данные могут быть устаревшими</string>
+
+    <string name="menu_content_description">Меню</string>
+    <string name="menu_change_pc">Сменить ПК</string>
+    <string name="menu_reload">Перезагрузить</string>
+    <string name="menu_open_offline">Открыть встроенную копию (офлайн)</string>
+    <string name="menu_back_to_pc">Переподключиться к ПК</string>
+    <string name="menu_about">О приложении</string>
+    <string name="about_message">DSH Mobile %1$s\n\nAndroid-клиент DeepSeek Harness для работы по локальной сети.\nПротокол мобильного API v1.\n\nСборки CI не подписаны. Устанавливайте только те сборки, которым доверяете.</string>
+
+    <string name="error_panel_title">ПК недоступен</string>
+    <string name="error_panel_detail_default">Проверьте, что DSH запущен на ПК, а телефон подключён к той же сети Wi-Fi.</string>
+    <string name="error_panel_retry">Повторить</string>
+    <string name="error_panel_change_pc">Сменить ПК</string>
+    <string name="error_panel_offline">Открыть встроенную копию</string>
+    <string name="error_code">Код ошибки: %1$d</string>
+    <string name="error_unknown">Неизвестная ошибка.</string>
+    <string name="error_ssl">Сертификат TLS на ПК не является доверенным для этого устройства. Используйте HTTP в локальной сети или установите доверенный сертификат на ПК.</string>
+    <string name="error_no_app_for_link">Не найдено приложение для открытия %1$s</string>
+    <string name="deep_link_unknown">Неизвестная ссылка dshm://.</string>
+</resources>

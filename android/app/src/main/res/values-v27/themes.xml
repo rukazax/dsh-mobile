@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- API 27+ additions to the base theme (values/themes.xml).
+         Kept in a qualified resource so minSdk 26 devices never see attributes
+         their platform does not know (and so Android Lint's NewApi check passes). -->
+    <style name="Theme.DshMobile" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/dsh_background</item>
+        <item name="android:colorPrimary">@color/dsh_accent</item>
+        <item name="android:colorPrimaryDark">@color/dsh_background</item>
+        <item name="android:colorAccent">@color/dsh_accent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <!-- Draw under the outer-screen camera cutout; the PWA handles env(safe-area-inset-*). -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>

@@ -1,0 +1,11 @@
+# dsh-mobile-spike: one profile layer that inserts exactly one Host plugin row.
+#
+# The row id is the handle used by later patch layers (and by HMR) to override
+# or disable this row without touching this package. `name` is the package that
+# the profile's node_modules must be able to resolve.
+- insert:
+    - id: dsh-mobile-spike
+      name: dsh-mobile-spike
+      config:
+        host: 127.0.0.1
+        port: 18099

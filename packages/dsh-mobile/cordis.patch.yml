@@ -1,0 +1,9 @@
+# DSH Mobile — install the remote gateway without changing any existing row.
+# Config fields are documented in README.md; every field is optional.
+- insert:
+    - id: mobile-remote
+      name: dsh-mobile
+      config:
+        enabled: true
+        listenPort: 3081
+        pairingTtlSec: 300

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DSH Mobile</string>
+
+    <string name="pairing_title">Connect to PC</string>
+    <string name="pairing_heading">Connect to your PC</string>
+    <string name="pairing_subtitle">Enter the address of the DSH host on your local network and the 8-character pairing code shown on the PC.</string>
+    <string name="pairing_server_label">PC address</string>
+    <string name="pairing_server_hint">http://192.168.1.10:3081</string>
+    <string name="pairing_code_label">Pairing code (8 characters, optional)</string>
+    <string name="pairing_code_hint">ABCD1234</string>
+    <string name="pairing_connect">Connect</string>
+    <string name="pairing_offline">Open bundled copy (offline)</string>
+    <string name="pairing_checking">Checking the connection to the PC…</string>
+    <string name="pairing_help">The address and code are shown on the PC at http://127.0.0.1:PORT/m/pair. If the port is omitted, 3081 is used.</string>
+    <string name="pairing_cleartext_note">HTTP is used on the local network, so traffic is not encrypted. Prefer HTTPS when the DSH host has a certificate.</string>
+
+    <string name="pair_error_empty_server">Enter the PC address first.</string>
+    <string name="pair_error_code_length">The pairing code must be exactly 8 characters, or left empty.</string>
+    <string name="pair_error_bad_scheme">Only http:// and https:// addresses are supported.</string>
+    <string name="pair_error_bad_host">The address could not be parsed. Example: http://192.168.1.10:3081</string>
+    <string name="pair_error_bad_port">The port must be between 1 and 65535.</string>
+    <string name="pair_error_http">The PC answered with HTTP %1$d. Check that the DSH mobile plugin is enabled and listening.</string>
+    <string name="pair_error_network">The PC is unreachable. Check Wi-Fi, the address and that the DSH host is running.</string>
+    <string name="pair_error_invalid_response">The PC response is not a valid DSH mobile handshake.</string>
+    <string name="pair_error_unsupported">Unsupported protocol version (%1$s). Update DSH Mobile or the DSH plugin.</string>
+    <string name="pair_error_unknown">Unknown error while checking the PC.</string>
+
+    <string name="offline_not_available">No bundled copy is available. Run android/scripts/sync-web.ps1 and rebuild the APK, or connect to a PC.</string>
+    <string name="warning_cleartext">Unencrypted HTTP channel: other devices on the local network can read this traffic.</string>
+    <string name="warning_cleartext_action">Hide</string>
+    <string name="offline_chip">Bundled copy: data may be stale</string>
+
+    <string name="menu_content_description">Menu</string>
+    <string name="menu_change_pc">Change PC</string>
+    <string name="menu_reload">Reload</string>
+    <string name="menu_open_offline">Open bundled copy (offline)</string>
+    <string name="menu_back_to_pc">Reconnect to PC</string>
+    <string name="menu_about">About</string>
+    <string name="about_message">DSH Mobile %1$s\n\nAndroid WebView client for DeepSeek Harness over the local network.\nMobile API protocol v1.\n\nCI builds are unsigned. Install only builds you trust.</string>
+
+    <string name="error_panel_title">Cannot reach the PC</string>
+    <string name="error_panel_detail_default">Check that the DSH host is running and that the phone is on the same Wi-Fi network.</string>
+    <string name="error_panel_retry">Retry</string>
+    <string name="error_panel_change_pc">Change PC</string>
+    <string name="error_panel_offline">Open bundled copy</string>
+    <string name="error_code">Error code: %1$d</string>
+    <string name="error_unknown">Unknown error.</string>
+    <string name="error_ssl">The TLS certificate of the PC is not trusted by this device. Use HTTP on the LAN or install a trusted certificate on the PC.</string>
+    <string name="error_no_app_for_link">No app found to open %1$s</string>
+    <string name="deep_link_unknown">Unrecognised dshm:// link.</string>
+</resources>

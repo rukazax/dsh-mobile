@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The gateway host/port is entered by the user at pairing time and Android's network
+  security configuration is static, so cleartext cannot be scoped to one host.
+  We therefore allow cleartext globally and show an explicit, dismissible warning
+  banner in the app whenever an http:// URL is loaded (see MainActivity).
+  HTTPS works out of the box with publicly trusted certificates; self-signed
+  certificates are rejected on purpose (no SslError bypass).
+-->
+<network-security-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

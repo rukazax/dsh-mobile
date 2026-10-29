@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>DSH Mobile — схемы работы</title>
+<style>
+  :root { --bg:#0f1218; --panel:#161b24; --panel2:#1b2230; --line:#2c3646; --text:#e9edf5; --muted:#93a0b5; --accent:#5b8dff; --ok:#3ddc97; --warn:#ffb454; --danger:#ff6b6b; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--text); font-family:"Segoe UI", Arial, sans-serif; }
+  body { padding: 24px 28px; }
+  h1 { font-size: 22px; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 18px; }
+  .canvas { width:100%; }
+  .t { fill: var(--text); font-size: 15px; font-weight:600; }
+  .s { fill: var(--muted); font-size: 12.5px; }
+  .mono { font-family: Consolas, monospace; font-size: 11.5px; fill:#c9d6ef; }
+  .box { fill: var(--panel); stroke: var(--line); stroke-width:1.5; rx:14; }
+  .box2 { fill: var(--panel2); stroke:#3a4a63; stroke-width:1.5; rx:12; }
+  .accent { stroke: var(--accent); }
+  .ok { stroke: var(--ok); }
+  .warn { stroke: var(--warn); }
+  .danger { stroke: var(--danger); }
+  .arrow { stroke:#7f93b3; stroke-width:1.8; fill:none; marker-end:url(#a); }
+  .arrow-accent { stroke:var(--accent); stroke-width:2; fill:none; marker-end:url(#ab); }
+  .arrow-ok { stroke:var(--ok); stroke-width:2; fill:none; marker-end:url(#ag); }
+  .arrow-warn { stroke:var(--warn); stroke-width:2; fill:none; marker-end:url(#aw); }
+  .label { fill:#aab8cf; font-size:11.5px; }
+  .small { fill:#8394ad; font-size:10.5px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const defs = `
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7f93b3"/></marker>
+  <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b8dff"/></marker>
+  <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3ddc97"/></marker>
+  <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffb454"/></marker>
+</defs>`;
+
+const diagrams = {
+  prompt: {
+    title: 'Как проходит промпт с телефона',
+    sub: 'Промпт активирует агента так же, как с десктопа; чтение истории — отдельный, бесплатный путь.',
+    w: 1240, h: 600,
+    svg: `
+      <g transform="translate(20,20)">
+        <rect class="box2 accent" x="0" y="40" width="250" height="430"/>
+        <text class="t" x="20" y="72">Телефон (PWA)</text>
+        <rect class="box" x="18" y="94" width="214" height="70"/>
+        <text class="s" x="34" y="122">композер</text>
+        <text class="small" x="34" y="142">transcript / queue / steer</text>
+        <rect class="box" x="18" y="180" width="214" height="70"/>
+        <text class="s" x="34" y="208">SSE-клиент</text>
+        <text class="small" x="34" y="228">курсор seq, дедупликация</text>
+        <rect class="box" x="18" y="266" width="214" height="90"/>
+        <text class="s" x="34" y="294">локальный кэш</text>
+        <text class="small" x="34" y="314">IndexedDB: сессии, события</text>
+        <text class="small" x="34" y="332">черновики, курсоры</text>
+        <rect class="box" x="18" y="372" width="214" height="76"/>
+        <text class="s" x="34" y="400">approvals</text>
+        <text class="small" x="34" y="420">allow / deny</text>
+      </g>
+
+      <g transform="translate(310,20)">
+        <rect class="box2 ok" x="0" y="40" width="300" height="430"/>
+        <text class="t" x="20" y="72">Плагин dsh-mobile</text>
+        <text class="s" x="20" y="94">в процессе DSH</text>
+        <rect class="box" x="18" y="112" width="264" height="88"/>
+        <text class="s" x="34" y="140">POST /api/v1/…/prompt</text>
+        <text class="small" x="34" y="160">Bearer-токен устройства</text>
+        <text class="small" x="34" y="178">requestId → идемпотентность</text>
+        <rect class="box" x="18" y="218" width="264" height="88"/>
+        <text class="s" x="34" y="246">SessionBridge</text>
+        <text class="small" x="34" y="266">content: [{type:"text"}]</text>
+        <text class="small" x="34" y="284">mode: queue | steer</text>
+        <rect class="box" x="18" y="324" width="264" height="70"/>
+        <text class="s" x="34" y="352">SSE hub</text>
+        <text class="small" x="34" y="372">delta / live / state</text>
+        <rect class="box" x="18" y="412" width="264" height="44"/>
+        <text class="small" x="34" y="439">approval/request waterfall</text>
+      </g>
+
+      <g transform="translate(680,20)">
+        <rect class="box2" x="0" y="40" width="250" height="430"/>
+        <text class="t" x="20" y="72">DSH host</text>
+        <rect class="box" x="18" y="94" width="214" height="70"/>
+        <text class="s" x="34" y="122">sessionController</text>
+        <text class="small" x="34" y="142">prompt / cancel</text>
+        <rect class="box" x="18" y="180" width="214" height="90"/>
+        <text class="s" x="34" y="208">Agent loop</text>
+        <text class="small" x="34" y="228">LLM-запрос</text>
+        <text class="small" x="34" y="246">инструменты, шаги</text>
+        <rect class="box" x="18" y="286" width="214" height="88"/>
+        <text class="s" x="34" y="314">durable-журнал</text>
+        <text class="small" x="34" y="334">JSONL + zstd, seq</text>
+        <text class="small" x="34" y="352">turn/start … turn/end</text>
+        <rect class="box" x="18" y="390" width="214" height="66"/>
+        <text class="s" x="34" y="418">шина session/event</text>
+      </g>
+
+      <g transform="translate(990,20)">
+        <rect class="box2 warn" x="0" y="40" width="230" height="430"/>
+        <text class="t" x="20" y="72">Стоимость</text>
+        <rect class="box" x="18" y="94" width="194" height="120"/>
+        <text class="s" x="34" y="122">чтение</text>
+        <text class="small" x="34" y="144">0 токенов</text>
+        <text class="small" x="34" y="164">durable-журнал</text>
+        <text class="small" x="34" y="182">без прогрева агента</text>
+        <rect class="box" x="18" y="234" width="194" height="120"/>
+        <text class="s" x="34" y="262">промпт</text>
+        <text class="small" x="34" y="284">как с десктопа</text>
+        <text class="small" x="34" y="304">без накладных</text>
+        <text class="small" x="34" y="322">вызовов модели</text>
+        <rect class="box" x="18" y="374" width="194" height="82"/>
+        <text class="s" x="34" y="402">approval</text>
+        <text class="small" x="34" y="422">остановка турна</text>
+        <text class="small" x="34" y="440">ждёт решения</text>
+      </g>
+
+      <path class="arrow-accent" d="M272 130 H 304"/>
+      <path class="arrow-ok" d="M612 130 H 672"/>
+      <path class="arrow" d="M932 130 H 984"/>
+      <path class="arrow" d="M612 250 H 672"/>
+      <path class="arrow" d="M932 250 H 984"/>
+      <text class="label" x="278" y="120">prompt</text>
+      <text class="label" x="618" y="240">agent</text>
+      <text class="label" x="938" y="240">события</text>
+    `,
+  },
+
+  events: {
+    title: 'Поток событий: журнал → проекция → экран',
+    sub: 'Телефон получает компактную проекцию durable-событий; сырой журнал и контекст модели не передаются.',
+    w: 1240, h: 560,
+    svg: `
+      <g transform="translate(20,30)">
+        <rect class="box" x="0" y="40" width="210" height="180"/>
+        <text class="t" x="20" y="72">durable-журнал</text>
+        <text class="small" x="20" y="96">session.v4.jsonl.zstd</text>
+        <text class="small" x="20" y="116">плотный seq, append-only</text>
+        <text class="small" x="20" y="136">source of truth</text>
+        <text class="small" x="20" y="160">без изменений при чтении</text>
+        <rect class="box" x="0" y="250" width="210" height="130"/>
+        <text class="t" x="20" y="282">шина session/event</text>
+        <text class="small" x="20" y="306">живые события с тем же seq</text>
+        <text class="small" x="20" y="326">assistant-stream — текст</text>
+      </g>
+
+      <g transform="translate(310,30)">
+        <rect class="box2 ok" x="0" y="40" width="270" height="340"/>
+        <text class="t" x="20" y="72">Мост (in-process)</text>
+        <rect class="box" x="18" y="94" width="234" height="80"/>
+        <text class="s" x="34" y="122">observeSession</text>
+        <text class="small" x="34" y="142">cold-safe, без promotion</text>
+        <rect class="box" x="18" y="188" width="234" height="80"/>
+        <text class="s" x="34" y="216">проекция</text>
+        <text class="small" x="34" y="236">k/d, обрезка tool-выводов</text>
+        <rect class="box" x="18" y="282" width="234" height="80"/>
+        <text class="s" x="34" y="310">окно ~35 событий</text>
+        <text class="small" x="34" y="330">4.3 КБ gzip на проводе</text>
+      </g>
+
+      <g transform="translate(660,30)">
+        <rect class="box2 accent" x="0" y="40" width="270" height="340"/>
+        <text class="t" x="20" y="72">Транспорт</text>
+        <rect class="box" x="18" y="94" width="234" height="80"/>
+        <text class="s" x="34" y="122">HTTP snapshot</text>
+        <text class="small" x="34" y="142">?turns=1&before=…</text>
+        <rect class="box" x="18" y="188" width="234" height="80"/>
+        <text class="s" x="34" y="216">SSE stream</text>
+        <text class="small" x="34" y="236">hello · delta · live · state</text>
+        <rect class="box" x="18" y="282" width="234" height="80"/>
+        <text class="s" x="34" y="310">cursor = seq</text>
+        <text class="small" x="34" y="330">реконнект — только пропуски</text>
+      </g>
+
+      <g transform="translate(990,30)">
+        <rect class="box2" x="0" y="40" width="230" height="340"/>
+        <text class="t" x="20" y="72">Телефон</text>
+        <rect class="box" x="18" y="94" width="194" height="90"/>
+        <text class="s" x="34" y="122">IndexedDB</text>
+        <text class="small" x="34" y="142">сессии, 50 событий/сессия</text>
+        <text class="small" x="34" y="160">курсоры, черновики</text>
+        <rect class="box" x="18" y="208" width="194" height="90"/>
+        <text class="s" x="34" y="236">рендер</text>
+        <text class="small" x="34" y="256">чат, tool-карточки</text>
+        <text class="small" x="34" y="274">approvals, статусы</text>
+        <rect class="box" x="18" y="322" width="194" height="44"/>
+        <text class="small" x="34" y="349">без polling</text>
+      </g>
+
+      <path class="arrow-ok" d="M214 130 H 304"/>
+      <path class="arrow-accent" d="M584 130 H 654"/>
+      <path class="arrow" d="M934 130 H 984"/>
+      <text class="label" x="220" y="120">read</text>
+      <text class="label" x="590" y="120">sync</text>
+      <text class="label" x="940" y="120">cache</text>
+      <path class="arrow" d="M214 310 H 304" transform="translate(0,0)"/>
+      <text class="label" x="220" y="300">live</text>
+    `,
+  },
+
+  security: {
+    title: 'Границы доверия: что открыто в LAN, а что только на ПК',
+    sub: 'Pairing-код и cookie DSH не покидают loopback; в локальную сеть выставлен только шлюз с device-токеном.',
+    w: 1240, h: 540,
+    svg: `
+      <g transform="translate(20,30)">
+        <rect class="box2 danger" x="0" y="40" width="340" height="420"/>
+        <text class="t" x="22" y="72">Телефон / локальная сеть</text>
+        <text class="s" x="22" y="94">недоверенная среда</text>
+        <rect class="box" x="20" y="114" width="300" height="88"/>
+        <text class="s" x="36" y="142">PWA / APK</text>
+        <text class="small" x="36" y="162">Bearer device-token</text>
+        <text class="small" x="36" y="180">токен только к :3081</text>
+        <rect class="box" x="20" y="222" width="300" height="88"/>
+        <text class="s" x="36" y="250">доступно</text>
+        <text class="small" x="36" y="270">PWA, /api/v1, SSE</text>
+        <text class="small" x="36" y="288">pairing-кода здесь нет</text>
+        <rect class="box" x="20" y="330" width="300" height="88"/>
+        <text class="s" x="36" y="358">защита</text>
+        <text class="small" x="36" y="378">TTL кода, rate-limit</text>
+        <text class="small" x="36" y="396">SHA-256 токена на ПК</text>
+      </g>
+
+      <g transform="translate(400,30)">
+        <rect class="box2 warn" x="0" y="40" width="360" height="420"/>
+        <text class="t" x="22" y="72">Loopback ПК</text>
+        <text class="s" x="22" y="94">только localhost</text>
+        <rect class="box" x="20" y="114" width="320" height="88"/>
+        <text class="s" x="36" y="142">GET /m/pair</text>
+        <text class="small" x="36" y="162">cookie DSH (владелец)</text>
+        <text class="small" x="36" y="180">код + LAN-адреса</text>
+        <rect class="box" x="20" y="222" width="320" height="88"/>
+        <text class="s" x="36" y="250">управление устройствами</text>
+        <text class="small" x="36" y="270">отзыв, новый код</text>
+        <text class="small" x="36" y="288">POST /devices/revoke</text>
+        <rect class="box" x="20" y="330" width="320" height="88"/>
+        <text class="s" x="36" y="358">TLS (опция)</text>
+        <text class="small" x="36" y="378">сертификат в конфиге</text>
+        <text class="small" x="36" y="396">или доверенный туннель</text>
+      </g>
+
+      <g transform="translate(800,30)">
+        <rect class="box2 ok" x="0" y="40" width="420" height="420"/>
+        <text class="t" x="22" y="72">Процесс DSH</text>
+        <text class="s" x="22" y="94">доверенная зона</text>
+        <rect class="box" x="20" y="114" width="380" height="70"/>
+        <text class="s" x="36" y="142">плагин dsh-mobile</text>
+        <text class="small" x="36" y="162">code: минимальный API</text>
+        <rect class="box" x="20" y="204" width="380" height="70"/>
+        <text class="s" x="36" y="232">сервисы DSH</text>
+        <text class="small" x="36" y="252">сессии, агент, approvals</text>
+        <rect class="box" x="20" y="294" width="380" height="70"/>
+        <text class="s" x="36" y="322">секреты</text>
+        <text class="small" x="36" y="342">не читаются плагином</text>
+        <rect class="box" x="20" y="384" width="380" height="56"/>
+        <text class="small" x="36" y="416">журнал сессий не изменяется при просмотре</text>
+      </g>
+
+      <path class="arrow-accent" d="M344 250 H 394"/>
+      <text class="label" x="336" y="240">:3081</text>
+      <path class="arrow-warn" d="M764 250 H 794"/>
+      <text class="label" x="748" y="240">in-process</text>
+    `,
+  },
+
+  approvals: {
+    title: 'Approvals: кто отвечает на подтверждение',
+    sub: 'Мост встаёт первым в waterfall: если десктопный GUI подключён — отвечает он, иначе телефон.',
+    w: 1240, h: 500,
+    svg: `
+      <g transform="translate(20,30)">
+        <rect class="box" x="0" y="40" width="230" height="330"/>
+        <text class="t" x="20" y="72">Агент</text>
+        <text class="small" x="20" y="96">tool wants approval</text>
+        <text class="small" x="20" y="116">approval.request(req)</text>
+        <rect class="box" x="18" y="140" width="194" height="70"/>
+        <text class="s" x="34" y="168">waterfall</text>
+        <text class="small" x="34" y="188">approval/request</text>
+        <rect class="box" x="18" y="230" width="194" height="70"/>
+        <text class="s" x="34" y="258">outcome</text>
+        <text class="small" x="34" y="278">allowed-once / rejected</text>
+      </g>
+
+      <g transform="translate(310,30)">
+        <rect class="box2 warn" x="0" y="40" width="330" height="330"/>
+        <text class="t" x="20" y="72">Мост dsh-mobile</text>
+        <text class="s" x="20" y="94">prepend: true, global: true</text>
+        <rect class="box" x="18" y="114" width="294" height="76"/>
+        <text class="s" x="34" y="142">есть live-десктоп?</text>
+        <text class="small" x="34" y="162">typertGateway.hasLiveClient()</text>
+        <rect class="box" x="18" y="208" width="294" height="76"/>
+        <text class="s" x="34" y="236">да → next()</text>
+        <text class="small" x="34" y="256">решает GUI, телефон только видит</text>
+        <rect class="box" x="18" y="302" width="294" height="52"/>
+        <text class="s" x="34" y="334">нет → свой таймаут 120 с</text>
+      </g>
+
+      <g transform="translate(700,30)">
+        <rect class="box2 ok" x="0" y="40" width="270" height="330"/>
+        <text class="t" x="20" y="72">Десктопный GUI</text>
+        <rect class="box" x="18" y="94" width="234" height="70"/>
+        <text class="s" x="34" y="122">диалог</text>
+        <text class="small" x="34" y="142">Разрешить / Запретить</text>
+        <rect class="box" x="18" y="186" width="234" height="70"/>
+        <text class="s" x="34" y="214">ответ</text>
+        <text class="small" x="34" y="234">allowed-once | rejected</text>
+      </g>
+
+      <g transform="translate(1010,30)">
+        <rect class="box2 accent" x="0" y="40" width="210" height="330"/>
+        <text class="t" x="20" y="72">Телефон</text>
+        <rect class="box" x="18" y="94" width="174" height="70"/>
+        <text class="s" x="34" y="122">SSE approval</text>
+        <text class="small" x="34" y="142">approvalId</text>
+        <rect class="box" x="18" y="186" width="174" height="70"/>
+        <text class="s" x="34" y="214">allow / deny</text>
+        <text class="small" x="34" y="234">POST /approval</text>
+        <rect class="box" x="18" y="278" width="174" height="76"/>
+        <text class="s" x="34" y="306">timeout</text>
+        <text class="small" x="34" y="326">cancelled</text>
+      </g>
+
+      <path class="arrow-warn" d="M234 100 H 304"/>
+      <path class="arrow-ok" d="M644 232 H 694"/>
+      <path class="arrow-accent" d="M974 232 H 1004"/>
+      <text class="label" x="240" y="90">if desktop</text>
+      <text class="label" x="650" y="222">GUI</text>
+      <text class="label" x="980" y="222">phone</text>
+    `,
+  },
+
+  install: {
+    title: 'Слои установки: где живёт плагин',
+    sub: 'Плагин — обычный bundle профиля DSH; он монтируется в процесс и поднимает шлюз, не патча приложение.',
+    w: 1200, h: 460,
+    svg: `
+      <g transform="translate(30,30)">
+        <text class="t" x="0" y="24">Профиль DSH (desktop)</text>
+        <rect class="box2" x="0" y="40" width="360" height="330"/>
+        <rect class="box" x="20" y="60" width="320" height="60"/>
+        <text class="s" x="36" y="86">@deepseek-ai/dsh-base</text>
+        <text class="small" x="36" y="106">ядро, сервисы, инструменты</text>
+        <rect class="box" x="20" y="134" width="320" height="60"/>
+        <text class="s" x="36" y="160">@deepseek-ai/dsh-web-app</text>
+        <text class="small" x="36" y="180">web-сервер, сессии, GUI</text>
+        <rect class="box ok" x="20" y="208" width="320" height="60"/>
+        <text class="s" x="36" y="234">dsh-mobile (link:)</text>
+        <text class="small" x="36" y="254">cordis.patch.yml → insert</text>
+        <rect class="box" x="20" y="282" width="320" height="66"/>
+        <text class="s" x="36" y="308">установка</text>
+        <text class="small" x="36" y="328">dsh plugin --profile desktop add</text>
+      </g>
+
+      <g transform="translate(450,30)">
+        <text class="t" x="0" y="24">Что монтирует плагин</text>
+        <rect class="box2 accent" x="0" y="40" width="330" height="330"/>
+        <rect class="box" x="20" y="60" width="290" height="60"/>
+        <text class="s" x="36" y="86">LAN-слушатель :3081</text>
+        <text class="small" x="36" y="106">PWA + /api/v1 + SSE</text>
+        <rect class="box" x="20" y="134" width="290" height="60"/>
+        <text class="s" x="36" y="160">/m/pair (loopback)</text>
+        <text class="small" x="36" y="180">cookie DSH, код привязки</text>
+        <rect class="box" x="20" y="208" width="290" height="60"/>
+        <text class="s" x="36" y="234">SessionBridge</text>
+        <text class="small" x="36" y="254">list / observe / prompt / cancel</text>
+        <rect class="box" x="20" y="282" width="290" height="66"/>
+        <text class="s" x="36" y="308">файловый лог</text>
+        <text class="small" x="36" y="328">DSH_HOME/logs/dsh-mobile.log</text>
+      </g>
+
+      <g transform="translate(830,30)">
+        <text class="t" x="0" y="24">Клиенты</text>
+        <rect class="box2" x="0" y="40" width="330" height="330"/>
+        <rect class="box" x="20" y="60" width="290" height="88"/>
+        <text class="s" x="36" y="88">PWA</text>
+        <text class="small" x="36" y="108">браузер телефона</text>
+        <text class="small" x="36" y="126">устанавливается по HTTPS</text>
+        <rect class="box" x="20" y="168" width="290" height="88"/>
+        <text class="s" x="36" y="196">APK (WebView)</text>
+        <text class="small" x="36" y="216">pairing-экран, deep links</text>
+        <text class="small" x="36" y="234">работает и по HTTP</text>
+        <rect class="box" x="20" y="276" width="290" height="72"/>
+        <text class="s" x="36" y="304">один origin</text>
+        <text class="small" x="36" y="324">нет CORS, cookie не нужны</text>
+      </g>
+    `,
+  },
+};
+
+const key = new URLSearchParams(location.search).get('d') || 'prompt';
+const diagram = diagrams[key] || diagrams.prompt;
+document.title = diagram.title;
+document.getElementById('root').innerHTML = `
+  <h1>${diagram.title}</h1>
+  <p class="sub">${diagram.sub}</p>
+  <svg class="canvas" width="${diagram.w}" height="${diagram.h}" viewBox="0 0 ${diagram.w} ${diagram.h}" xmlns="http://www.w3.org/2000/svg">
+    ${defs}
+    ${diagram.svg}
+  </svg>`;
+</script>
+</body>
+</html>

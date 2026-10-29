@@ -1,0 +1,866 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>DSH Mobile — инструкция</title>
+<style>
+  @page { size: A4; margin: 15mm 14mm 16mm; }
+  :root { --ink:#10151d; --muted:#5b6678; --line:#dfe5ee; --accent:#2456d8; --soft:#f4f7fc; --warn:#b45309; --danger:#b91c1c; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; color:var(--ink); font-family:"Segoe UI", Arial, sans-serif; font-size:9.1pt; line-height:1.33; }
+  @media screen { body { background:#e9edf4; } .page { width:210mm; min-height:297mm; margin:8mm auto; padding:15mm 14mm; background:#fff; box-shadow:0 2px 18px rgba(0,0,0,.12); } }
+  @media print { .page { break-after: page; } .page:last-child { break-after: auto; } }
+  h1 { font-size:26pt; line-height:1.1; margin:0 0 4mm; letter-spacing:-.02em; }
+  h2 { font-size:14.5pt; margin:0 0 2.2mm; padding-bottom:1.6mm; border-bottom:1.5px solid var(--line); }
+  h3 { font-size:11pt; margin:3.4mm 0 1.2mm; }
+  p { margin:0 0 2mm; }
+  ul, ol { margin:.8mm 0 2.2mm 5mm; padding:0; }
+  li { margin:0 0 .7mm; }
+  .lead { color:var(--muted); font-size:11pt; }
+  .small { font-size:8.6pt; color:var(--muted); }
+  .caption { font-size:8.4pt; color:var(--muted); text-align:center; margin:1.2mm 0 3mm; }
+  .page { overflow:hidden; }
+  .mono, code, pre { font-family: Consolas, "Cascadia Mono", monospace; }
+  code { font-size:8.8pt; background:var(--soft); border:1px solid var(--line); border-radius:3px; padding:.4mm 1.2mm; }
+  pre { font-size:8pt; background:#0f1218; color:#e9edf5; border-radius:5px; padding:2.2mm 2.8mm; line-height:1.45; white-space:pre-wrap; margin:1.4mm 0 2.6mm; }
+  pre .c { color:#93a0b5; }
+  table { width:100%; border-collapse:collapse; margin:1.4mm 0 2.8mm; font-size:8.2pt; }
+  th, td { border:1px solid var(--line); padding:1.1mm 1.6mm; text-align:left; vertical-align:top; }
+  th { background:var(--soft); font-weight:600; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:5mm; align-items:start; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4mm; align-items:start; }
+  .figure { break-inside:avoid; margin:0; text-align:center; }
+  .figure img { max-width:100%; max-height:86mm; width:auto; display:block; margin:0 auto; border-radius:4mm; border:1px solid #cfd7e3; }
+  .figure.wide img { width:100%; max-height:60mm; object-fit:contain; border-radius:3mm; }
+  .pairing-page .figure img { max-height:68mm; }
+  .pairing-page .figure.wide img { max-height:47mm; }
+  .appendix pre { font-size:7.2pt; padding:1.7mm 2.3mm; margin:1mm 0 1.8mm; }
+  .appendix table { font-size:7.9pt; }
+  .appendix h3 { margin:2.6mm 0 1mm; }
+  .note { background:var(--soft); border-left:3px solid var(--accent); padding:2.5mm 3mm; border-radius:0 3px 3px 0; margin:2mm 0 4mm; font-size:9pt; }
+  .note.warn { border-color:var(--warn); background:#fff8ec; }
+  .note.danger { border-color:var(--danger); background:#fef2f2; }
+  .toc td { border:0; border-bottom:1px dotted var(--line); padding:1.8mm 0; font-size:10pt; }
+  .toc td:last-child { text-align:right; color:var(--muted); }
+  .badge { display:inline-block; font-size:8pt; font-weight:600; border-radius:999px; padding:.6mm 2.4mm; background:#e8efff; color:var(--accent); margin-right:2mm; }
+  .badge.ok { background:#e8f8ef; color:#0f7a4a; }
+  .badge.warn { background:#fff3e0; color:#9a5b00; }
+  .cover { display:flex; flex-direction:column; justify-content:space-between; height:258mm; }
+  .cover .brand { display:flex; align-items:center; gap:4mm; }
+  .logo { width:16mm; height:16mm; border-radius:4mm; background:linear-gradient(145deg,#5b8dff,#2447c9); color:#fff; display:flex; align-items:center; justify-content:center; font-family:Consolas,monospace; font-weight:700; font-size:15pt; }
+  .cover h1 { font-size:34pt; margin-top:10mm; }
+  .cover .tagline { font-size:13pt; color:var(--muted); max-width:120mm; }
+  .cover .meta { border-top:1px solid var(--line); padding-top:4mm; font-size:9pt; color:var(--muted); display:flex; justify-content:space-between; }
+  .kpi { display:grid; grid-template-columns:repeat(4,1fr); gap:3mm; margin:4mm 0; }
+  .kpi div { border:1px solid var(--line); border-radius:3mm; padding:2.5mm; background:var(--soft); }
+  .kpi b { display:block; font-size:13pt; color:var(--accent); }
+  .kpi span { font-size:8pt; color:var(--muted); }
+  .two-col-list { column-count:2; column-gap:8mm; }
+  .gallery-shot img { max-height:64mm; }
+  .install-shot img { max-height:50mm; }
+  .two-diagrams .figure.wide img { max-height:58mm; }
+  .three-diagrams .figure.wide img { max-height:50mm; }
+  .footer-note { margin-top:4mm; border-top:1px solid var(--line); padding-top:2mm; font-size:8pt; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ COVER ══════════════════════════ -->
+<section class="page cover" id="s1">
+  <div>
+    <div class="brand">
+      <div class="logo">&gt;_</div>
+      <div>
+        <b style="font-size:13pt">DSH Mobile</b><br>
+        <span class="small">пульт управления DeepSeek Harness</span>
+      </div>
+    </div>
+    <h1>Мобильный клиент<br>DeepSeek Harness</h1>
+    <p class="tagline">Управление живыми сессиями агента с Android-телефона и раскладных устройств.
+    Синхронизация истории без лишних токенов, pairing по коду, approvals, две панели на внутреннем экране.</p>
+    <div style="margin-top:9mm; border:1px solid var(--line); border-radius:4mm; padding:6mm 7mm; background:#fbfcff;">
+      <div style="font-size:9pt; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; margin-bottom:3mm;">Что внутри инструкции</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:5mm; font-size:9.4pt;">
+        <div><b>Установка и pairing</b><br><span style="color:var(--muted)">одна команда, один код, пять шагов</span></div>
+        <div><b>Работа с сессиями</b><br><span style="color:var(--muted)">список, чат, стриминг, approvals</span></div>
+        <div><b>Синхронизация</b><br><span style="color:var(--muted)">курсор, дельты, ноль токенов на просмотр</span></div>
+        <div><b>Раскладные экраны</b><br><span style="color:var(--muted)">две панели, шов, Layout Lab</span></div>
+      </div>
+    </div>
+    <div class="kpi">
+      <div><b>0</b><span>токенов на просмотр сессий</span></div>
+      <div><b>4.3 КБ</b><span>открытие сессии (gzip)</span></div>
+      <div><b>20/20</b><span>юнит- и e2e-тестов</span></div>
+      <div><b>2 панели</b><span>на раскладном экране</span></div>
+    </div>
+  </div>
+  <div>
+    <div class="meta">
+      <span>Инструкция пользователя · версия 1.0</span>
+      <span>DeepSeek Harness 0.2.1-rc.2 · Windows · Android</span>
+      <span>2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ TOC ══════════════════════════ -->
+<section class="page" id="s2">
+  <h2>Содержание</h2>
+  <table class="toc">
+    <tr><td>1. Что это и что умеет</td><td>3</td></tr>
+    <tr><td>2. Как это работает: архитектура</td><td>4</td></tr>
+    <tr><td>3. Установка плагина в DeepSeek Harness</td><td>5</td></tr>
+    <tr><td>4. Первое подключение телефона (pairing)</td><td>6</td></tr>
+    <tr><td>5. Экран сессий</td><td>7</td></tr>
+    <tr><td>6. Чат, стриминг и отправка промптов</td><td>8</td></tr>
+    <tr><td>7. Approvals и вопросы агента</td><td>9</td></tr>
+    <tr><td>8. Синхронизация и экономия токенов</td><td>10</td></tr>
+    <tr><td>9. Раскладные устройства</td><td>11</td></tr>
+    <tr><td>10. Настройки и диагностика</td><td>12</td></tr>
+    <tr><td>11. Безопасность</td><td>13</td></tr>
+    <tr><td>12. Частые проблемы (FAQ)</td><td>14</td></tr>
+    <tr><td>13. Ограничения версии 1 и что проверено</td><td>15</td></tr>
+    <tr><td>Приложение. Файлы, протокол, команды</td><td>16</td></tr>
+    <tr><td>Приложение Б. Как проходит промпт и approvals</td><td>17</td></tr>
+    <tr><td>Приложение В. Журнал событий, безопасность</td><td>18</td></tr>
+    <tr><td>Приложение Г. Слои установки и галерея</td><td>19</td></tr>
+  </table>
+
+  <h3>Кому подходит</h3>
+  <p>Документ рассчитан на пользователя, который уже работает с DeepSeek Harness на компьютере
+  и хочет отвечать агенту, читать историю и подтверждать действия с телефона. Программировать
+  ничего не нужно: установка — одна команда, подключение — один код.</p>
+
+  <h3>Что понадобится</h3>
+  <ul>
+    <li>DeepSeek Harness <b>0.2.1-rc.2</b> (или совместимая версия) на Windows;</li>
+    <li>телефон Android 8+ и общий Wi-Fi с компьютером;</li>
+    <li>свободный порт <code>3081</code> на компьютере;</li>
+    <li>для APK — JDK 17 и Android SDK; на этой машине тулчейн уже установлен (JDK 17.0.20, SDK 35, Gradle 8.9).</li>
+  </ul>
+
+  <div class="note">
+    <b>Что входит в комплект.</b> Плагин <code>dsh-mobile</code> с LAN-шлюзом и pairing-страницей,
+    PWA-клиент (<code>packages/dsh-mobile/web</code>), Android-обёртка (<code>android/</code>)
+    и CI-сборка APK (<code>.github/workflows/android.yml</code>). Исходный код и документация — в папке проекта.
+  </div>
+
+  <div class="footer-note">DSH Mobile · инструкция · стр. 2</div>
+</section>
+
+<!-- ══════════════════════════ 1. FEATURES ══════════════════════════ -->
+<section class="page" id="s3">
+  <h2>1. Что это и что умеет</h2>
+  <p>DSH Mobile — мобильный клиент для DeepSeek Harness. Он не заменяет десктопное приложение,
+  а становится его пультом: те же сессии, та же история, тот же агент — но в кармане.
+  Плагин работает <b>внутри процесса DSH</b>, поэтому видит всё, что видит десктопный GUI,
+  и не требует второй копии приложения.</p>
+
+  <h3>Возможности</h3>
+  <table>
+    <tr><th style="width:34%">Возможность</th><th>Что делает</th></tr>
+    <tr><td>Список сессий</td><td>Заголовки, воркспейс, модель, статус <code>running / blocked / queued</code>, время активности, поиск.</td></tr>
+    <tr><td>Открытие сессии</td><td>Окно последних ~35 событий: реплика пользователя, ответы ассистента, карточки инструментов.</td></tr>
+    <tr><td>Живой поток</td><td>Новые события приходят через SSE; текст ассистента печатается по мере генерации.</td></tr>
+    <tr><td>Отправка промптов</td><td>Обычная отправка, в очередь и «steer» в текущий ход; остановка хода.</td></tr>
+    <tr><td>Approvals</td><td>Подтверждение опасных команд: «Разрешить» / «Запретить» — с телефона, когда десктоп не подключён.</td></tr>
+    <tr><td>Вопросы агента</td><td>Показ вопроса и вариантов ответа (ответ — на десктопе в v1).</td></tr>
+    <tr><td>Раскладные экраны</td><td>Две панели на внутреннем экране, одна — на внешнем; состояние не сбрасывается.</td></tr>
+    <tr><td>Офлайн-старт</td><td>Мгновенный показ кэша из IndexedDB, затем догрузка с компьютера.</td></tr>
+  </table>
+
+  <div class="grid2">
+    <figure class="figure">
+      <img src="screens/01-sessions.png" alt="Список сессий">
+      <div class="caption">Список сессий: статусы, воркспейс, модель, последняя активность</div>
+    </figure>
+    <div>
+      <h3>Ключевая идея — экономия токенов</h3>
+      <p>Телефон <b>не пересылает транскрипт</b> и <b>не запускает модель ради синхронизации</b>.
+      История читается из уже существующего журнала сессии, живые события — из шины DSH.
+      Просмотр с телефона стоит <b>0 токенов</b>; промпт — ровно столько, сколько промпт с десктопа.</p>
+      <ul>
+        <li>чтение истории — cold-safe, без «прогрева» агента;</li>
+        <li>никакой генерации заголовков и компакции при просмотре;</li>
+        <li>дельты по курсору вместо полного транскрипта;</li>
+        <li>превью инструментов обрезаются до 1 КБ.</li>
+      </ul>
+      <div class="note">
+        <b>Сравнение.</b> Открытие реальной сессии: <b>35 событий</b>, <b>17.8 КБ JSON</b>,
+        <b>4.3 КБ gzip</b> на проводе. Список из двух сессий — около <b>1 КБ gzip</b>.
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 3</div>
+</section>
+
+<!-- ══════════════════════════ 2. ARCHITECTURE ══════════════════════════ -->
+<section class="page" id="s4">
+  <h2>2. Как это работает: архитектура</h2>
+  <p>Внутри DeepSeek Harness работает плагин. Он поднимает <b>отдельный LAN-слушатель</b> на порту
+  <code>3081</code>: оттуда телефон получает сам клиент (PWA) и API. Плагин общается с сервисами
+  DSH напрямую, в процессе, — поэтому ему не нужны ни второй сервер, ни пересылка данных через облако.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/arch.png" alt="Архитектура DSH Mobile">
+    <div class="caption">Три слоя: телефон → плагин в процессе DSH → сервисы и журнал сессий</div>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <h3>Почему именно плагин</h3>
+      <p>Отдельный сервер-компаньон потребовал бы заново реализовать внутренний протокол DSH
+      и хранить копию состояния. Плагин же использует те же сервисы, что и десктопный интерфейс:</p>
+      <ul>
+        <li><code>sessionController</code> — список, история, промпты, отмена;</li>
+        <li><code>sessionQuery</code> — чтение журнала без активации агента;</li>
+        <li>шина <code>session/event</code> — живые durable-события;</li>
+        <li><code>approval</code> — перехват запросов подтверждения.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Два origin — и зачем</h3>
+      <p><b>Порт 3081</b> — LAN: клиент и API, авторизация токеном устройства.
+      <b>Родной порт DSH</b> — только страница <code>/m/pair</code>, защищённая cookie DSH.</p>
+      <p>Разделение принципиальное: код привязки физически не отдаётся в локальную сеть,
+      его видит только тот, кто уже сидит за компьютером.</p>
+      <div class="note warn">
+        <b>Важно.</b> Порт 3081 — это ваша локальная сеть. Без TLS токен устройства
+        передаётся открытым текстом. Для домашней сети допустимо; для гостевых сетей
+        включите TLS или используйте туннель.
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 4</div>
+</section>
+
+<!-- ══════════════════════════ 3. INSTALL ══════════════════════════ -->
+<section class="page" id="s5">
+  <h2>3. Установка плагина в DeepSeek Harness</h2>
+  <p>Плагин — локальная папка <code>packages/dsh-mobile</code>. Установка занимает минуту и
+  выполняется один раз; после неё клиент доступен на телефоне.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/install.png" alt="Пять шагов установки">
+    <div class="caption">Пять шагов: закрыть DSH → установить пакет → запустить → открыть /m/pair → спарить телефон</div>
+  </figure>
+
+  <h3>Шаг 1. Закрыть DeepSeek Harness</h3>
+  <p>Полностью, включая значок в системном трее: профиль не должен быть занят установкой.</p>
+
+  <h3>Шаг 2. Установить пакет</h3>
+  <p>Откройте PowerShell и выполните (замените путь на свой):</p>
+  <pre><span class="c"># путь к CLI DeepSeek Harness</span>
+$cli = "C:\Users\&lt;вы&gt;\AppData\Local\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd"
+&amp; $cli plugin --profile desktop add "link:C:\Users\<user>\Documents\deepseek-harness\harness\packages\dsh-mobile"</pre>
+  <p>Команда ставит пакет как <code>link:</code>-зависимость профиля и добавляет его в список
+  бандлов. Успех — код возврата 0 и запись в <code>%USERPROFILE%\.dsh\profiles\desktop\package.json</code>.</p>
+
+  <h3>Шаг 3. Запустить DeepSeek Harness</h3>
+  <p>Плагин стартует вместе с приложением: поднимает порт <code>3081</code> и регистрирует
+  страницу <code>/m/pair</code>. В логе <code>%USERPROFILE%\.dsh\logs\dsh-mobile.log</code> появятся строки
+  <code>apply() start</code> и <code>gateway listening</code>.</p>
+
+  <h3>Шаг 4. Проверить, что шлюз жив</h3>
+  <p>На компьютере откройте:</p>
+  <pre>http://127.0.0.1:3081/api/v1/hello</pre>
+  <p>Ожидаемый ответ:</p>
+  <pre>{"protocol":1,"appVersion":"0.2.1-rc.2","requiresPairing":true,
+ "capabilities":{"approvals":true,"questions":true,"liveStream":true}}</pre>
+
+  <h3>Шаг 5. Настроить (необязательно)</h3>
+  <p>Все параметры — в <code>%USERPROFILE%\.dsh\profiles\desktop\cordis.patch.yml</code>
+  (таблица параметров — в приложении). После изменения порта или TLS перезапустите DSH:
+  слушатель читает настройки при старте.</p>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 5</div>
+</section>
+
+<!-- ══════════════════════════ 4. PAIRING ══════════════════════════ -->
+<section class="page pairing-page" id="s6">
+  <h2>4. Первое подключение телефона (pairing)</h2>
+  <p>Привязка выполняется один раз. Нужны: компьютер с открытым DSH и телефон в той же сети Wi-Fi.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/pairing.png" alt="Схема привязки">
+    <div class="caption">Код виден только на компьютере; телефон обменивает его на токен устройства</div>
+  </figure>
+
+  <div class="grid2">
+    <figure class="figure">
+      <img src="screens/11-pair-page-pc.png" alt="Страница /m/pair на компьютере">
+      <div class="caption">Страница <code>/m/pair</code> на компьютере: код, адреса, устройства</div>
+    </figure>
+    <div>
+      <h3>Порядок действий</h3>
+      <ol>
+        <li>На компьютере откройте <code>http://127.0.0.1:&lt;порт DSH&gt;/m/pair</code>.</li>
+        <li>Запишите <b>8-символьный код</b> и <b>адрес сервера</b> (например, <code>192.168.1.10:3081</code>).</li>
+        <li>На телефоне откройте <code>http://192.168.1.10:3081/</code>.</li>
+        <li>Нажмите «Подключить ПК», введите адрес и код.</li>
+        <li>Готово: появится список сессий, а устройство — в списке на странице <code>/m/pair</code>.</li>
+      </ol>
+      <div class="note">
+        <b>QR-код.</b> Ссылка вида <code>dshm://pair?url=http://192.168.1.10:3081&amp;code=XXXXXXXX</code>
+        открывает приложение сразу с заполненными полями. Её можно закодировать любым генератором QR.
+      </div>
+      <p class="small">Код одноразовый, действует 5 минут, после 5 ошибок сгорает. Если не успели —
+        нажмите «Новый код» на странице.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Если телефон не видит компьютер</h3>
+      <ul>
+        <li>проверьте, что оба устройства в одной Wi-Fi сети (не в гостевой);</li>
+        <li>разрешите порт <code>3081</code> в брандмауэре Windows для частной сети;</li>
+        <li>убедитесь, что в конфиге не стоит <code>listenHost: 127.0.0.1</code>;</li>
+        <li>посмотрите адреса на странице <code>/m/pair</code> — там перечислены все интерфейсы.</li>
+      </ul>
+      <h3>Отзыв доступа</h3>
+      <p>На странице <code>/m/pair</code> нажмите «Отозвать» рядом с устройством. Токен перестаёт
+      работать немедленно; чтобы вернуть доступ, привяжите устройство заново. Экран привязки на
+      телефоне — на рисунке ниже.</p>
+    </div>
+    <figure class="figure">
+      <img src="screens/06-pair.png" alt="Экран подключения на телефоне">
+      <div class="caption">Экран «Подключить ПК» на телефоне</div>
+    </figure>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 6</div>
+</section>
+
+<!-- ══════════════════════════ 5. SESSIONS ══════════════════════════ -->
+<section class="page" id="s7">
+  <h2>5. Экран сессий</h2>
+  <p>После привязки открывается список сессий — те же сессии, что в десктопном DSH, включая
+  активные и завершённые.</p>
+
+  <div class="grid2">
+    <figure class="figure">
+      <img src="screens/01-sessions.png" alt="Список сессий">
+      <div class="caption">Список: статус, воркспейс, модель, последняя активность</div>
+    </figure>
+    <div>
+      <h3>Что означают элементы</h3>
+      <table>
+        <tr><th>Элемент</th><th>Значение</th></tr>
+        <tr><td>Заголовок</td><td>имя сессии; если DSH ещё не сгенерировал — «Без названия»</td></tr>
+        <tr><td><span class="badge ok">работает</span></td><td>агент выполняет ход прямо сейчас</td></tr>
+        <tr><td><span class="badge warn">ждёт решения</span></td><td>турн приостановлен на approval</td></tr>
+        <tr><td><span class="badge">Вопрос</span></td><td>агент задал вопрос пользователю</td></tr>
+        <tr><td><span class="badge">подтверждение</span></td><td>есть запрос на разрешение действия</td></tr>
+        <tr><td>«в очереди»</td><td>сообщение ждёт следующего хода</td></tr>
+      </table>
+      <h3>Действия</h3>
+      <ul>
+        <li><b>Потянуть вниз</b> — обновить список;</li>
+        <li><b>Поиск</b> — фильтр по заголовку, воркспейсу и тексту;</li>
+        <li><b>«+»</b> — новая сессия в текущем воркспейсе;</li>
+        <li><b>Настройки</b> — сервер, устройство, диагностика.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Почему список появляется мгновенно</h3>
+  <p>Список и последние события кэшируются в браузере (IndexedDB). При открытии приложения
+  вы сразу видите вчерашнюю картину, а затем она тихо обновляется с компьютера — без экранов
+  загрузки и без повторной загрузки всей истории.</p>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 7</div>
+</section>
+
+<!-- ══════════════════════════ 6. CHAT ══════════════════════════ -->
+<section class="page" id="s8">
+  <h2>6. Чат, стриминг и отправка промптов</h2>
+  <p>Откройте сессию — увидите последний ход: вашу реплику, ответы ассистента и карточки
+  вызванных инструментов. Новые сообщения появляются сами: клиент держит живой поток.</p>
+
+  <div class="grid2">
+    <figure class="figure">
+      <img src="screens/02-chat.png" alt="Чат с ответами ассистента и карточками инструментов">
+      <div class="caption">Чат: ответы, карточки инструментов, сворачиваемые детали</div>
+    </figure>
+    <div>
+      <h3>Стриминг</h3>
+      <p>Текст ответа печатается по мере генерации. После завершения шага приходит финальное
+      сообщение, и отображение становится консистентным — даже если связь прерывалась.</p>
+      <h3>Карточки инструментов</h3>
+      <p>Каждый вызов инструмента — отдельная карточка: имя, аргументы (обрезаны), статус
+      «выполняется / успешно / ошибка». Нажмите на карточку, чтобы увидеть детали.</p>
+      <h3>Отправка</h3>
+      <ul>
+        <li><b>Отправить</b> — обычная отправка в текущий ход;</li>
+        <li><b>В очередь</b> — сообщение уйдёт после завершения текущего хода;</li>
+        <li><b>Steer</b> — вклиниться в текущий ход;</li>
+        <li><b>Остановить</b> — прервать ход, не трогая очередь.</li>
+      </ul>
+      <p class="small">Клавиатура: <code>Ctrl+Enter</code> — отправить, <code>Enter</code> — перенос строки.
+      На телефоне — кнопка отправки.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <figure class="figure">
+      <img src="screens/08-chat-light.png" alt="Светлая тема">
+      <div class="caption">Светлая тема — переключается в настройках или системно</div>
+    </figure>
+    <div>
+      <h3>Чтение истории</h3>
+      <p>Открывается последний ход — этого достаточно, чтобы понять контекст. Если нужно
+      глубже, нажмите «Загрузить раньше»: клиент догрузит предыдущий фрагмент. Каждая
+      догрузка — отдельный запрос, без пересылки всей сессии.</p>
+      <div class="note">
+        <b>Токены.</b> Чтение и прокрутка истории не вызывают модель. Даже если вы
+        пролистаете всю сессию, расход останется нулевым: это чтение журнала, а не
+        новый контекст для агента.
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 8</div>
+</section>
+
+<!-- ══════════════════════════ 7. APPROVALS ══════════════════════════ -->
+<section class="page" id="s9">
+  <h2>7. Approvals и вопросы агента</h2>
+  <p>Некоторые действия агент не может выполнить без подтверждения: запуск команды,
+  запись файла, выход за песочницу. В этот момент турн останавливается и ждёт решения.</p>
+
+  <div class="grid2">
+    <figure class="figure">
+      <img src="screens/03-approval.png" alt="Экран подтверждения команды">
+      <div class="caption">Approval: «Разрешить» / «Запретить», команда показана целиком</div>
+    </figure>
+    <div>
+      <h3>Как это работает</h3>
+      <ol>
+        <li>Агент запрашивает подтверждение — оно появляется на телефоне.</li>
+        <li>Вы видите, что именно будет выполнено, и выбираете «Разрешить» или «Запретить».</li>
+        <li>Агент продолжает работу или получает отказ.</li>
+      </ol>
+      <h3>Кто отвечает</h3>
+      <p>По умолчанию (<code>approvals: auto</code>) телефон перехватывает подтверждение <b>только если
+      десктопный интерфейс не подключён</b>. Если DSH открыт на компьютере — отвечает компьютер,
+      а телефон показывает статус «решается на ПК».</p>
+      <p>Режимы в конфиге: <code>auto</code> (по умолчанию), <code>relay</code> (всегда
+      отвечает телефон) и <code>observe</code> (только показ, ответ на компьютере).</p>
+      <div class="note warn">
+        «Разрешить навсегда» не поддерживается: в DSH есть только разовое разрешение или
+        запрет. Кнопка «Запомнить выбор» в интерфейсе — задел на будущее, сейчас не сохраняется.
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <figure class="figure">
+      <img src="screens/04-question.png" alt="Вопрос агента с вариантами ответа">
+      <div class="caption">Вопрос агента: варианты ответа и поле «свой вариант»</div>
+    </figure>
+    <div>
+      <h3>Вопросы агента</h3>
+      <p>Когда агенту нужно уточнение, на телефоне открывается карточка вопроса: текст,
+      варианты ответа и поле для своего варианта. В версии 1 ответ отправляется с компьютера;
+      телефон показывает вопрос, чтобы вы понимали, почему турн ждёт.</p>
+      <h3>Если турн «завис»</h3>
+      <ul>
+        <li>проверьте, нет ли ожидающего подтверждения — откройте сессию;</li>
+        <li>нажмите «Остановить», чтобы прервать ход;</li>
+        <li>при необходимости очистите очередь в композере.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 9</div>
+</section>
+
+<!-- ══════════════════════════ 8. SYNC ══════════════════════════ -->
+<section class="page" id="s10">
+  <h2>8. Синхронизация и экономия токенов</h2>
+  <p>Синхронизация устроена как подписка на журнал, а не как копирование переписки.
+  Клиент помнит последний номер события (<code>seq</code>) и при каждом подключении просит
+  только то, что пропустил.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/sync.png" alt="Схема синхронизации">
+    <div class="caption">Курсор → дельты → догон после обрыва; при разрыве плотности — resync</div>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <h3>Почему это дешево</h3>
+      <ul>
+        <li><b>Список</b> — метаданные из кэша DSH, ~1 КБ gzip;</li>
+        <li><b>Открытие</b> — окно последнего хода, 4–6 КБ gzip;</li>
+        <li><b>Живой поток</b> — только новые события;</li>
+        <li><b>Реконнект</b> — только пропущенное, без полного транскрипта.</li>
+      </ul>
+      <p>Периодического опроса нет: соединение живёт, пока приложение открыто, и закрывается
+      при сворачивании. Курсор сохраняется, поэтому возврат в приложение не начинает всё заново.</p>
+    </div>
+    <div>
+      <h3>Что запрещено архитектурой</h3>
+      <table>
+        <tr><th>Операция</th><th>Почему нельзя</th></tr>
+        <tr><td>Генерация заголовков при чтении</td><td>лишний вызов модели</td></tr>
+        <tr><td>Компакция при открытии</td><td>меняет журнал и тратит токены</td></tr>
+        <tr><td>«Прогрев» холодной сессии</td><td>активирует агента ради просмотра</td></tr>
+        <tr><td>Полный транскрипт</td><td>десятки килобайт вместо дельты</td></tr>
+      </table>
+      <div class="note">
+        <b>Факт из проверки.</b> Открытие реальной сессии на 287 событий в журнале заняло
+        <b>35 событий</b> и <b>4.3 КБ gzip</b>. Просмотр не отправил ни одного запроса к модели.
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 10</div>
+</section>
+
+<!-- ══════════════════════════ 9. FOLDABLES ══════════════════════════ -->
+<section class="page" id="s11">
+  <h2>9. Раскладные устройства</h2>
+  <p>Клиент учитывает позу устройства. На Honor Magic V3 и аналогах внутренний экран
+  раскрывается в две панели, внешний остаётся однопанельным. Переход между позами —
+  это смена CSS, а не перезагрузка: черновик, прокрутка и живой поток сохраняются.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/foldable.png" alt="Схема раскладных поз">
+    <div class="caption">Сложен — одна панель; раскрыт — две панели с шовным отступом</div>
+  </figure>
+
+  <figure class="figure wide">
+    <img src="screens/07-foldable.png" alt="Две панели на широком экране">
+    <div class="caption">Раскрытое устройство (или планшет): список слева, чат справа</div>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <h3>Как определяется поза</h3>
+      <p>Используются CSS Viewport Segments: <code>@media (horizontal-viewport-segments: 2)</code>,
+      <code>@media (spanning: single-fold-vertical)</code>, переменные
+      <code>env(viewport-segment-width …)</code>. Ширина панелей берётся из реальных сегментов,
+      а шов становится отступом 16–48 px, поэтому контент не «переезжает» через сгиб.</p>
+      <p>На широких экранах (≥840 dp) список закрепляется постоянной колонкой — как на планшете.</p>
+    </div>
+    <div>
+      <h3>Проверка без устройства</h3>
+      <p>Откройте клиент с параметром <code>?demo=1&amp;lab=1</code> — включится Layout Lab:
+      можно переключать 1/2 сегмента, менять ширину и шов. Это удобно, чтобы показать
+      поведение на обычном мониторе.</p>
+      <div class="note">
+        <b>Совет.</b> На раскрытом экране удобно вести чат справа, а слева держать список —
+        переключение сессий не сбрасывает поток.
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 11</div>
+</section>
+
+<!-- ══════════════════════════ 10. SETTINGS ══════════════════════════ -->
+<section class="page" id="s12">
+  <h2>10. Настройки и диагностика</h2>
+  <p>Настройки открываются из списка сессий. Здесь видно, к какому серверу подключён телефон,
+  и есть живые счётчики — по ним удобно проверять связь.</p>
+
+  <div class="grid2">
+    <figure class="figure">
+      <img src="screens/05-settings.png" alt="Экран настроек и диагностики">
+      <div class="caption">Настройки: сервер, устройство, счётчики, предупреждение о HTTP</div>
+    </figure>
+    <div>
+      <h3>Что есть на экране</h3>
+      <table>
+        <tr><th>Поле</th><th>Смысл</th></tr>
+        <tr><td>Сервер</td><td>адрес шлюза; кнопка «Изменить» — перепривязка</td></tr>
+        <tr><td>Состояние</td><td>«Устройство сопряжено» или приглашение к привязке</td></tr>
+        <tr><td>Хост DSH</td><td>имя компьютера</td></tr>
+        <tr><td>Устройство</td><td>имя, под которым телефон виден в <code>/m/pair</code></td></tr>
+        <tr><td>Протокол</td><td>версия мобильного API</td></tr>
+        <tr><td>Запросов / Получено</td><td>счётчики трафика клиента</td></tr>
+        <tr><td>RTT / SSE</td><td>задержка и состояние живого потока</td></tr>
+        <tr><td>Сессий в кэше</td><td>сколько сессий сохранено в IndexedDB</td></tr>
+        <tr><td>Синхронизация</td><td>время последнего успешного обновления</td></tr>
+      </table>
+      <h3>Полезные действия</h3>
+      <ul>
+        <li><b>Изменить сервер</b> — если компьютер сменил IP;</li>
+        <li><b>Отозвать устройство</b> — на компьютере, на странице <code>/m/pair</code>;</li>
+        <li><b>Тема и язык</b> — светлая/тёмная, русский/английский.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <b>Красное предупреждение.</b> Если подключаетесь по <code>http://</code>, клиент честно
+    предупреждает, что токен может быть виден в локальной сети. Для HTTPS укажите
+    <code>tls.certFile</code> и <code>tls.keyFile</code> в конфиге плагина и перезапустите DSH.
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 12</div>
+</section>
+
+<!-- ══════════════════════════ 11. SECURITY ══════════════════════════ -->
+<section class="page" id="s13">
+  <h2>11. Безопасность</h2>
+  <p>Мобильный доступ — это полноценное управление агентом, поэтому шлюз спроектирован
+  как отдельная точка входа со своей авторизацией, а не как «открытый порт DSH».</p>
+
+  <h3>Что защищает доступ</h3>
+  <table>
+    <tr><th style="width:30%">Угроза</th><th>Мера</th></tr>
+    <tr><td>Кто-то в той же Wi-Fi сети</td><td>Bearer-токен устройства; без него API отвечает 401</td></tr>
+    <tr><td>Подбор кода привязки</td><td>8 символов, TTL 5 минут, 5 попыток, rate-limit по IP, код одноразовый</td></tr>
+    <tr><td>Кража кода с экрана</td><td>код показывается только на loopback-странице, защищённой cookie DSH</td></tr>
+    <tr><td>Кража файла состояния</td><td>в файле хранится только SHA-256 токена, сверка — timing-safe</td></tr>
+    <tr><td>Забытое устройство</td><td>отзыв на <code>/m/pair</code> или <code>POST /devices/revoke</code></td></tr>
+    <tr><td>Слишком большой запрос</td><td>лимит JSON-тела 512 КБ</td></tr>
+    <tr><td>Выход за каталог в статике</td><td>нормализация пути и проверка префикса корня</td></tr>
+  </table>
+
+  <div class="grid2">
+    <div>
+      <h3>Что плагин НЕ делает</h3>
+      <ul>
+        <li>не читает <code>.credentials.yaml</code> и другие секреты;</li>
+        <li>не выполняет произвольные команды — API ограничен сессиями;</li>
+        <li>не пишет в журнал сессий и не меняет их при просмотре;</li>
+        <li>не отправляет данные в интернет: всё общение — в локальной сети.</li>
+      </ul>
+      <h3>Рекомендации</h3>
+      <ul>
+        <li>привязывайте только свои устройства, отзывайте ненужные;</li>
+        <li>не публикуйте порт 3081 в интернет;</li>
+        <li>в гостевых сетях используйте TLS или туннель;</li>
+        <li>периодически проверяйте список устройств на <code>/m/pair</code>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>TLS и установка PWA</h3>
+      <p>По HTTP клиент работает из браузера, но полноценная установка (standalone,
+      service worker) требует HTTPS. Варианты:</p>
+      <ul>
+        <li>свой сертификат в конфиге плагина (<code>tls</code>);</li>
+        <li>туннель с валидным сертификатом (например, Tailscale);</li>
+        <li>APK-обёртка — она работает и по HTTP, с предупреждением.</li>
+      </ul>
+      <div class="note danger">
+        <b>Не используйте самоподписанный сертификат</b> для установки PWA: браузер не
+        доверяет ему, и service worker не включится. Лучше локальный CA (mkcert) или туннель.
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 13</div>
+</section>
+
+<!-- ══════════════════════════ 12. FAQ ══════════════════════════ -->
+<section class="page" id="s14">
+  <h2>12. Частые проблемы (FAQ)</h2>
+  <table>
+    <tr><th style="width:32%">Симптом</th><th>Что сделать</th></tr>
+    <tr><td>Страница <code>/m/pair</code> отдаёт 404</td><td>Плагин не загрузился. Проверьте <code>%USERPROFILE%\.dsh\logs\dsh-mobile.log</code> — должна быть строка <code>apply() start</code>. Если её нет — переустановите пакет и перезапустите DSH.</td></tr>
+    <tr><td>Порт 3081 не слушается</td><td>Порт занят другой программой — измените <code>listenPort</code> в конфиге. Либо плагин упал: смотрите лог.</td></tr>
+    <tr><td>Телефон не открывает страницу</td><td>Другой Wi-Fi? Брандмауэр Windows? В конфиге <code>listenHost: 127.0.0.1</code>? Проверьте адреса на <code>/m/pair</code>.</td></tr>
+    <tr><td>«Код недействителен»</td><td>Код истёк, использован или попытки исчерпаны. На странице <code>/m/pair</code> нажмите «Новый код».</td></tr>
+    <tr><td>401 после успешной привязки</td><td>Устройство отозвано или файл состояния удалён. Привяжите заново.</td></tr>
+    <tr><td>Список сессий пуст</td><td>В DSH нет сессий с сохранённым журналом, либо открыт другой профиль/воркспейс.</td></tr>
+    <tr><td>Чат открывается, но без сообщений</td><td>У сессии нет durable-событий (только что создана). Отправьте промпт или обновите.</td></tr>
+    <tr><td>Сессии грузятся, но отправка не работает</td><td>Проверьте, что в DSH задана модель и есть доступ к провайдеру; ошибка покажется тостом.</td></tr>
+    <tr><td>Подтверждение не появляется на телефоне</td><td>В режиме <code>auto</code> отвечает подключённый десктоп. Закройте вкладку DSH или включите <code>relay</code>.</td></tr>
+    <tr><td>APK не устанавливается</td><td>Разрешите установку из неизвестных источников; release-APK из CI не подписан — используйте debug.</td></tr>
+  </table>
+
+  <h3>Где смотреть логи</h3>
+  <pre><span class="c"># лог плагина (создаётся автоматически)</span>
+%USERPROFILE%\.dsh\logs\dsh-mobile.log
+
+<span class="c"># состояние привязок (только хеши токенов)</span>
+%USERPROFILE%\.dsh\mobile-remote\mobile-remote.json</pre>
+
+  <h3>Быстрая проверка связи</h3>
+  <pre><span class="c"># 1. шлюз жив</span>
+curl http://127.0.0.1:3081/api/v1/hello
+
+<span class="c"># 2. API требует токен</span>
+curl -i http://127.0.0.1:3081/api/v1/sessions
+<span class="c"># ожидается: 401 auth-required</span></pre>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 14</div>
+</section>
+
+<!-- ══════════════════════════ 13. LIMITS ══════════════════════════ -->
+<section class="page" id="s15">
+  <h2>13. Ограничения версии 1 и что проверено</h2>
+
+  <h3>Ограничения</h3>
+  <table>
+    <tr><th style="width:34%">Ограничение</th><th>Комментарий</th></tr>
+    <tr><td>Ответы на вопросы агента — только с десктопа</td><td>в v1 телефон показывает вопрос, но не отвечает: ответ требует живого корневого агента и стоит токенов</td></tr>
+    <tr><td>Нет вложений и изображений</td><td>мобильный API возвращает <code>attachments:false</code></td></tr>
+    <tr><td>Нет push-уведомлений</td><td>узнать о завершении хода можно, открыв приложение</td></tr>
+    <tr><td>HTTP без TLS по умолчанию</td><td>для домашней сети; для HTTPS нужен сертификат</td></tr>
+    <tr><td>APK собран локально (debug 2.25 МБ)</td><td>запуск на реальном устройстве не проверен; сборка в CI — резервная</td></tr>
+  </table>
+
+  <h3>Что реально проверено</h3>
+  <table>
+    <tr><th style="width:34%">Проверка</th><th>Результат</th></tr>
+    <tr><td>Юнит- и интеграционные тесты</td><td><b>20/20</b> (pairing, токены, TTL, rate-limit, HTTP, SSE, статика)</td></tr>
+    <tr><td>Загрузка плагина в DSH</td><td>успешно; LAN-порт и <code>/m/pair</code> подняты, лог пишется</td></tr>
+    <tr><td>Pairing на реальном инстансе</td><td>код получен на ПК, телефон обменял его на токен</td></tr>
+    <tr><td>Реальные сессии</td><td>список с заголовками; открытие — 35 событий, 4.3 КБ gzip</td></tr>
+    <tr><td>SSE</td><td><code>hello</code> с курсором, дельты, живой текст</td></tr>
+    <tr><td>Отзыв устройства</td><td>токен немедленно получает 401</td></tr>
+    <tr><td>PWA</td><td>реальные скриншоты из Chromium; логика и статика проверены</td></tr>
+    <tr><td>Android-обёртка</td><td>APK собран локально (Gradle 8.9 + wrapper, lint 0 ошибок); XML/ресурсы/YAML проверены</td></tr>
+  </table>
+
+  <h3>Что осталось проверить на устройстве</h3>
+  <ul>
+    <li>реальный промпт и реальный approval end-to-end (в проверке не тратили токены);</li>
+    <li>визуальный рендер и шов на Honor Magic V3;</li>
+    <li>установка PWA по HTTPS и service worker;</li>
+    <li>запуск собранного APK на реальном устройстве (эмулятор/телефон).</li>
+  </ul>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 15</div>
+</section>
+
+<!-- ══════════════════════════ APPENDIX ══════════════════════════ -->
+<section class="page appendix" id="s16">
+  <h2>Приложение. Файлы, протокол, команды</h2>
+
+  <h3>Структура проекта</h3>
+  <pre>packages/dsh-mobile/        плагин + PWA
+  lib/index.js              вход Cordis: LAN-слушатель, /m/pair, лог
+  src/                      конфиг, auth, store, HTTP/SSE, маршруты, мост
+  web/                      PWA без сборки и зависимостей
+  test/                     20 тестов (node:test)
+android/                    Android-обёртка (WebView) + CI-workflow
+docs/                       архитектура, установка, протокол, проверки, UX
+</pre>
+
+  <h3>Параметры конфигурации</h3>
+  <table>
+    <tr><th>Параметр</th><th>По умолчанию</th><th>Зачем</th></tr>
+    <tr><td><code>listenPort</code></td><td>3081</td><td>порт LAN-шлюза</td></tr>
+    <tr><td><code>pairingTtlSec</code></td><td>300</td><td>время жизни кода привязки</td></tr>
+    <tr><td><code>tls.certFile / keyFile</code></td><td>—</td><td>HTTPS на LAN (PWA ставится как приложение)</td></tr>
+    <tr><td><code>approvals</code></td><td>auto</td><td><code>auto</code> / <code>relay</code> / <code>observe</code></td></tr>
+    <tr><td><code>sessionWindowEvents</code></td><td>40</td><td>жёсткий кап событий в окне</td></tr>
+    <tr><td><code>debug</code></td><td>false</td><td>подробный лог запросов</td></tr>
+  </table>
+
+  <h3>Ключевые эндпоинты</h3>
+  <table>
+    <tr><th>Метод и путь</th><th>Назначение</th></tr>
+    <tr><td><code>GET /api/v1/hello</code></td><td>версия, возможности, лимиты (без токена)</td></tr>
+    <tr><td><code>POST /api/v1/pair</code></td><td>обмен кода на токен устройства</td></tr>
+    <tr><td><code>GET /api/v1/sessions</code></td><td>список сессий (Bearer)</td></tr>
+    <tr><td><code>GET /api/v1/sessions/{id}?turns=1</code></td><td>окно истории + курсор</td></tr>
+    <tr><td><code>GET /api/v1/sessions/{id}/stream?cursor=N</code></td><td>SSE: hello / delta / live / state / approval / resync</td></tr>
+    <tr><td><code>POST /api/v1/sessions/{id}/prompt</code></td><td>промпт: transcript / queue / steer</td></tr>
+    <tr><td><code>POST /api/v1/sessions/{id}/cancel</code></td><td>остановка: turn / queue / all</td></tr>
+    <tr><td><code>POST /api/v1/sessions/{id}/approval</code></td><td>разрешить / запретить действие</td></tr>
+    <tr><td><code>GET /api/v1/workspaces</code>, <code>/jobs</code></td><td>воркспейсы и фоновые задачи</td></tr>
+  </table>
+
+  <h3>Команды</h3>
+  <pre><span class="c"># тесты плагина</span>
+cd packages\dsh-mobile
+node scripts\run-tests.mjs
+
+<span class="c"># локальный предпросмотр PWA без DSH</span>
+node scripts\serve-web.mjs 8765
+<span class="c"># затем: http://127.0.0.1:8765/?demo=1  и  ?demo=1&amp;lab=1</span>
+
+<span class="c"># сборка APK локально (JDK 17 + SDK 35 + Gradle 8.9)</span>
+<span class="c"># . .\android\env.ps1; cd android; .\gradlew.bat assembleDebug</span></pre>
+
+  <div class="note">
+    <b>Версии.</b> Проверено на DeepSeek Harness 0.2.1-rc.2 (Cordis 4.0.5), Node 24, Windows.
+    Плагин использует документированные сервисы DSH и не патчит чужие модули; при обновлении
+    DSH сверяйте <code>compatibility.json</code> и прогоняйте тесты.
+  </div>
+
+  <div class="footer-note">DSH Mobile · инструкция · стр. 16 · MIT · неофициальный клиент DeepSeek Harness</div>
+</section>
+
+
+<!-- ══════════════════════════ APPENDIX B: PROMPT FLOW ══════════════════════════ -->
+<section class="page two-diagrams">
+  <h2>Приложение Б. Как проходит промпт и approvals</h2>
+  <p>Отправка сообщения с телефона проходит тот же путь, что и с десктопа: плагин вызывает
+  штатный <code>sessionController.prompt</code>, агент делает запрос к модели и выполняет
+  инструменты, а события возвращаются обратно по SSE. Чтение истории — отдельный путь,
+  который не активирует агента и не расходует токены.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/work-prompt.png" alt="Как проходит промпт с телефона">
+    <div class="caption">Промпт: телефон → шлюз → sessionController → agent loop → события → телефон</div>
+  </figure>
+
+  <p>Подтверждения (approvals) обрабатываются waterfall-событием. Если десктопный интерфейс
+  подключён, отвечает он; если нет — запрос уходит на телефон и ждёт решения до 120 секунд,
+  после чего снимается как <code>cancelled</code>.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/work-approvals.png" alt="Схема approvals: десктоп или телефон">
+    <div class="caption">Approvals: приоритет десктопного GUI, иначе — телефон; таймаут не вешает турн</div>
+  </figure>
+
+  <div class="note">Ответ «разрешить навсегда» не поддерживается: в DSH есть только разовое
+  разрешение или запрет. Таймаут снимает вопрос, но не отменяет сам ход.</div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 17</div>
+</section>
+
+<!-- ══════════════════════════ APPENDIX C: EVENTS + SECURITY ══════════════════════════ -->
+<section class="page three-diagrams">
+  <h2>Приложение В. Журнал событий и границы доверия</h2>
+  <p>Источник истины — append-only журнал сессии. Плагин читает его cold-safe, проецирует
+  события в компактный формат (с обрезкой выводов инструментов) и отдаёт телефону окно
+  последних событий и дельты по курсору.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/work-events.png" alt="Поток событий: журнал, проекция, транспорт, кэш">
+    <div class="caption">События: журнал → проекция → HTTP/SSE → IndexedDB → экран</div>
+  </figure>
+
+  <p>Сеть разделена на зоны. В локальную сеть выставлен только LAN-шлюз с device-токеном;
+  код привязки и cookie DSH доступны исключительно на loopback-адресе компьютера.</p>
+
+  <figure class="figure wide">
+    <img src="diagrams/work-security.png" alt="Границы доверия: LAN, loopback, процесс DSH">
+    <div class="caption">Границы доверия: что доступно в LAN, а что только на компьютере</div>
+  </figure>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 18</div>
+</section>
+
+<!-- ══════════════════════════ APPENDIX D: LAYERS + GALLERY ══════════════════════════ -->
+<section class="page appendix">
+  <h2>Приложение Г. Слои установки и галерея</h2>
+  <p>Плагин — обычный bundle профиля DSH: добавляется в <code>dsh.profile.bundles</code> и монтируется в процесс, не изменяя приложение. Внутри — LAN-слушатель, <code>/m/pair</code>, мост к сессиям и лог.</p>
+
+  <figure class="figure wide install-shot">
+    <img src="diagrams/work-install.png" alt="Слои установки: профиль DSH, плагин, клиенты">
+    <div class="caption">Слои установки: профиль DSH → плагин → клиенты</div>
+  </figure>
+
+  <h3>Галерея интерфейса</h3>
+  <div class="grid2">
+    <figure class="figure gallery-shot">
+      <img src="screens/12-sessions-light.png" alt="Список сессий, светлая тема">
+      <div class="caption">Список сессий — светлая тема</div>
+    </figure>
+    <figure class="figure gallery-shot">
+      <img src="screens/13-search.png" alt="Поиск по сессиям">
+      <div class="caption">Локальный поиск по сессиям</div>
+    </figure>
+    <figure class="figure gallery-shot">
+      <img src="screens/14-composer.png" alt="Композер с черновиком">
+      <div class="caption">Композер: черновик и отправка</div>
+    </figure>
+    <figure class="figure gallery-shot">
+      <img src="screens/15-approval-light.png" alt="Подтверждение действия">
+      <div class="caption">Подтверждение действия — светлая тема</div>
+    </figure>
+  </div>
+  <div class="footer-note">DSH Mobile · инструкция · стр. 19</div>
+</section>
+
+</body>
+</html>
+

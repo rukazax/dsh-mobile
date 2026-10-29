@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>DSH Mobile — офлайн</title>
+  <meta name="theme-color" content="#0b0e14">
+  <style>
+    :root { color-scheme: dark; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #0b0e14;
+      color: #e8ecf5;
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+    .card { max-width: 380px; text-align: center; }
+    .badge {
+      width: 64px; height: 64px; margin: 0 auto 20px;
+      display: grid; place-items: center;
+      border-radius: 20px;
+      background: linear-gradient(150deg, #4d6bfe, #8b5cf6);
+      font-size: 26px; font-weight: 700;
+    }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    p { color: #9aa6bd; margin: 0 0 10px; font-size: 14px; }
+    .en { font-size: 12.5px; opacity: .75; }
+    a.retry {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px; min-width: 44px; margin-top: 18px; padding: 0 22px;
+      border-radius: 999px; background: #4d6bfe; color: #fff;
+      text-decoration: none; font-weight: 600;
+    }
+    :focus-visible { outline: 2px solid #8b5cf6; outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge" aria-hidden="true">&gt;_</div>
+    <h1>Нет связи с ПК</h1>
+    <p>Телефон офлайн или DSH-хост недоступен. Откройте DSH на компьютере и проверьте, что оба устройства в одной сети Wi-Fi.</p>
+    <p class="en">No connection to the PC. Make sure DSH is running and both devices are on the same Wi-Fi.</p>
+    <a class="retry" href="./">Обновить · Retry</a>
+  </div>
+</body>
+</html>

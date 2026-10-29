@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Unfolded foldable / tablet: do not stretch the form across the whole inner display. -->
+    <dimen name="pairing_side_padding">120dp</dimen>
+    <dimen name="pairing_top_padding">48dp</dimen>
+    <dimen name="pairing_bottom_padding">48dp</dimen>
+    <dimen name="error_panel_horizontal_padding">48dp</dimen>
+</resources>

@@ -1,0 +1,53 @@
+{
+  "name": "DSH Mobile",
+  "short_name": "DSH",
+  "description": "Пульт для DeepSeek Harness: сессии, живой поток, подтверждения. Сделано под раскладушки.",
+  "lang": "ru",
+  "dir": "ltr",
+  "id": "./",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0b0e14",
+  "theme_color": "#0b0e14",
+  "categories": ["developer", "productivity"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Список сессий",
+      "short_name": "Сессии",
+      "description": "Все сессии DSH",
+      "url": "./#/sessions",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Новая сессия",
+      "short_name": "Новая",
+      "description": "Создать сессию и открыть диалог",
+      "url": "./#/sessions?new=1",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

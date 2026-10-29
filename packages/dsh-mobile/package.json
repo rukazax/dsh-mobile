@@ -1,0 +1,46 @@
+{
+  "name": "dsh-mobile",
+  "displayName": "DSH Mobile Remote",
+  "description": "Remote control for DeepSeek Harness from an Android phone or foldable: LAN gateway, QR/code pairing, delta session sync with zero token overhead, and a foldable-first PWA.",
+  "version": "0.1.0",
+  "author": "DSH Mobile contributors",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "remote-control",
+    "mobile",
+    "android",
+    "foldable",
+    "pwa"
+  ],
+  "type": "module",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./compatibility.json": "./compatibility.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "web",
+    "cordis.patch.yml",
+    "compatibility.json",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/",
+    "check": "node --check lib/index.js && node --test test/",
+    "serve:web": "node scripts/serve-web.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "MIT"
+}

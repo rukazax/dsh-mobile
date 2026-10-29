@@ -1,0 +1,46 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+
+# Secrets and personal data — never commit
+_secrets/
+*.secret
+*.token
+**/credentials.json
+**/session.json
+**/tokens.json
+**/browser-profile/
+.probe-cookie.json
+
+# Local runtime / generated state
+*.log
+research/app/
+research/asar/
+research/tmp/
+research/dshtest/
+research/dshtest2/
+research/dsh*t/
+
+# Node
+node_modules/
+.pnpm-store/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Android / Gradle build output
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/.idea/
+android/captures/
+
+# Temporary test data
+packages/dsh-mobile/test/.tmp/

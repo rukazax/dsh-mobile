@@ -1,0 +1,87 @@
+# Builds the DSH Mobile Android WebView wrapper APK.
+#
+# This repository intentionally does not ship the Gradle wrapper JAR and the build
+# machine used to author the sources has no JDK/Android SDK. CI therefore provisions
+# Gradle 8.9 and the Android SDK (platform 35 + build-tools 35.0.0) itself and
+# publishes debug and unsigned release APKs as artifacts.
+name: Android APK
+
+on:
+  push:
+    paths:
+      - 'android/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Assemble APKs
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          # v3's default is 'tools platform-tools', but Google no longer serves the
+          # legacy 'tools' package; only platform-tools is needed here.
+          packages: 'platform-tools'
+
+      - name: Install SDK platform 35 and build-tools 35.0.0
+        run: |
+          sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          sdkmanager --list_installed
+
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+          validate-wrappers: false
+
+      - name: Sync bundled PWA (if present)
+        run: |
+          set -euo pipefail
+          if [ -d packages/dsh-mobile/web ] && [ -f packages/dsh-mobile/web/index.html ]; then
+            mkdir -p android/app/src/main/assets/www
+            cp -a packages/dsh-mobile/web/. android/app/src/main/assets/www/
+            echo "::notice::Bundled PWA synced from packages/dsh-mobile/web"
+          else
+            echo "::notice::packages/dsh-mobile/web not found; APK will load the PWA from the gateway and bundling is unavailable"
+          fi
+
+      - name: Assemble debug APK
+        working-directory: android
+        run: gradle --stacktrace assembleDebug
+
+      - name: Assemble unsigned release APK
+        working-directory: android
+        run: gradle --stacktrace assembleRelease
+
+      - name: List produced APKs
+        working-directory: android
+        run: find app/build/outputs/apk -name '*.apk' -exec ls -lh {} \;
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsh-mobile-apk
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14

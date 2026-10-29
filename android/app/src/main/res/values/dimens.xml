@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="pairing_side_padding">24dp</dimen>
+    <dimen name="pairing_top_padding">32dp</dimen>
+    <dimen name="pairing_bottom_padding">32dp</dimen>
+    <dimen name="error_panel_horizontal_padding">24dp</dimen>
+</resources>

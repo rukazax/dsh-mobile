@@ -1,0 +1,348 @@
+/* DSH Mobile — layout: app shell, single/dual/rail panes, foldable segments, Layout Lab.
+ *
+ * The layout is CSS-only: posture changes never re-render or reset JS state.
+ * Panes always exist in the DOM; folded mode slides between them, unfolded mode
+ * shows both side by side with the physical hinge as a real grid gutter.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+  background: var(--bg);
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: var(--app-h);
+  max-height: var(--app-h);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 60% at 100% 0%, var(--accent-soft), transparent 60%),
+    var(--bg);
+}
+
+/* Class-level display values must never resurrect an element with [hidden]. */
+[hidden] {
+  display: none !important;
+}
+
+/* ── panes ──────────────────────────────────────────────────────────── */
+
+.panes {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: var(--pane-cols, 1fr);
+  grid-template-rows: 1fr;
+  background: var(--bg-deep);
+  overflow: hidden;
+}
+
+.pane {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  transition:
+    transform var(--t-med) var(--ease-out),
+    opacity var(--t-fast) var(--ease),
+    visibility 0s linear var(--t-med);
+  will-change: transform;
+}
+
+.pane-list {
+  grid-area: var(--list-area, 1 / 1 / 2 / 2);
+  background: var(--surface);
+  padding-left: var(--safe-left);
+}
+
+.pane-chat {
+  grid-area: var(--chat-area, 1 / 1 / 2 / 2);
+  background: var(--bg);
+  padding-right: var(--safe-right);
+}
+
+/* Folded / narrow: one pane at a time, slide navigation keeps state alive. */
+:root {
+  --pane-cols: 1fr;
+  --list-area: 1 / 1 / 2 / 2;
+  --chat-area: 1 / 1 / 2 / 2;
+  --pane-layout: single;
+}
+
+.app[data-view="chat"] .pane-list {
+  transform: translateX(-16%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.app[data-view="list"] .pane-chat {
+  transform: translateX(16%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.app[data-view="chat"] .pane-chat,
+.app[data-view="list"] .pane-list {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* Route overlay (pair / settings / lab): panes stay mounted underneath. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  justify-content: center;
+  background: var(--surface);
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+/* ── rail: wide phones in landscape / tablets, NOT spanning ─────────── */
+@media (min-width: 840px) {
+  :root {
+    --pane-cols: minmax(300px, 340px) minmax(0, 1fr);
+    --list-area: 1 / 1 / 2 / 2;
+    --chat-area: 1 / 2 / 2 / 3;
+    --pane-layout: rail;
+  }
+
+  .pane-list {
+    border-inline-end: 1px solid var(--border);
+  }
+
+  .app[data-view] .pane-list,
+  .app[data-view] .pane-chat {
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .chat-back {
+    display: none;
+  }
+
+  .overlay {
+    background: var(--scrim);
+    align-items: center;
+    padding: var(--sp-6);
+  }
+}
+
+/* The gutter is never narrower than 16px, and panes sit exactly inside
+ * their segments, so content can not cross the fold. */
+@media (spanning: single-fold-vertical), (horizontal-viewport-segments: 2), (spanning: dual-screen) {
+  :root {
+    --hinge-w: max(
+      16px,
+      calc(
+        env(viewport-segment-left 1 0, 0px) - env(viewport-segment-right 0 0, 0px)
+      )
+    );
+    --seg-0-w: env(viewport-segment-width 0 0, calc((100% - 16px) / 2));
+    --seg-1-w: env(viewport-segment-width 1 0, calc((100% - 16px) / 2));
+    --pane-cols: var(--seg-0-w) var(--hinge-w) var(--seg-1-w);
+    --list-area: 1 / 1 / 2 / 2;
+    --chat-area: 1 / 3 / 2 / 4;
+    --pane-layout: dual;
+  }
+
+  .pane-list {
+    border-inline-end: 0;
+  }
+
+  .chat-back {
+    display: none;
+  }
+
+  .app[data-view] .pane-list,
+  .app[data-view] .pane-chat {
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  /* A hairline centred in the hinge makes the seam intentional, not a bug. */
+  .panes::after {
+    content: "";
+    grid-area: 1 / 2 / 2 / 3;
+    justify-self: center;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--border-strong) 12%, var(--border-strong) 88%, transparent);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .overlay {
+    background: var(--scrim);
+    align-items: center;
+    padding: var(--sp-6);
+  }
+}
+
+/* Extra breathing room around the physical fold on very wide inner screens. */
+@media (min-width: 900px) and (horizontal-viewport-segments: 2) {
+  .pane-list .list-head,
+  .pane-list .list-scroll {
+    padding-inline-end: calc(var(--sp-3) + 8px);
+  }
+
+  .pane-chat .chat-head,
+  .pane-chat .chat-scroll,
+  .pane-chat .composer {
+    padding-inline-start: calc(var(--sp-3) + 8px);
+  }
+}
+
+/* ── Layout Lab (?lab=1): simulate a foldable inside a normal window ─── */
+
+html.lab body {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 80% at 50% 0%, var(--accent-soft), transparent 55%),
+    var(--bg-deep);
+  overflow: hidden;
+}
+
+html.lab .app {
+  width: min(96vw, var(--lab-w, 940px));
+  height: min(92dvh, var(--lab-h, 880px));
+  max-height: none;
+  border-radius: 26px;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-2), 0 0 0 6px var(--surface-2);
+  overflow: hidden;
+}
+
+html.lab[data-lab-layout="dual"] {
+  --pane-cols: calc((100% - var(--lab-hinge, 24px)) / 2) var(--lab-hinge, 24px)
+    calc((100% - var(--lab-hinge, 24px)) / 2);
+  --list-area: 1 / 1 / 2 / 2;
+  --chat-area: 1 / 3 / 2 / 4;
+}
+
+html.lab[data-lab-layout="dual"] .pane {
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+html.lab[data-lab-layout="dual"] .pane-list {
+  border-inline-end: 0;
+}
+
+html.lab[data-lab-layout="dual"] .chat-back,
+html.lab[data-lab-layout="rail"] .chat-back {
+  display: none;
+}
+
+html.lab[data-lab-layout="rail"] {
+  --pane-cols: minmax(300px, 340px) minmax(0, 1fr);
+  --list-area: 1 / 1 / 2 / 2;
+  --chat-area: 1 / 2 / 2 / 3;
+}
+
+html.lab[data-lab-layout="rail"] .pane {
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+html.lab[data-lab-layout="single"] {
+  --pane-cols: 1fr;
+  --list-area: 1 / 1 / 2 / 2;
+  --chat-area: 1 / 1 / 2 / 2;
+}
+
+html.lab[data-lab-layout="dual"] .overlay {
+  background: var(--scrim);
+  align-items: center;
+  padding: var(--sp-6);
+}
+
+/* Pseudo-device notch for realism in the lab frame. */
+html.lab .app::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  z-index: var(--z-sticky);
+  width: 68px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  opacity: 0.55;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Narrow screens: the lab panel floats above the device frame, so leave room. */
+@media (max-width: 899px) {
+  html.lab .app {
+    height: min(80dvh, 780px);
+    margin-top: 64px;
+  }
+
+  html.lab .lab-bar {
+    top: 8px;
+  }
+}
+
+html.lab .pane-head {
+  padding-top: max(var(--sp-3), calc(var(--safe-top) + 8px));
+}
+
+/* Keyboard: main.js shrinks --app-h from visualViewport.height on Android. */
+@supports (height: 100dvh) {
+  .app {
+    height: var(--app-h);
+  }
+}
+
+/* Small phones in landscape: keep composer usable. */
+@media (max-height: 420px) and (orientation: landscape) {
+  :root {
+    --fs-md: calc(13.5px * var(--font-scale));
+    --sp-4: 12px;
+  }
+}

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- First-run pairing screen. Plain XML views (no Compose, no AppCompat):
+     PC address + optional 8-character pairing code, validated with GET /api/v1/hello. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pairing_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dsh_background">
+
+    <ScrollView
+        android:id="@+id/pairing_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/pairing_side_padding"
+            android:paddingTop="@dimen/pairing_top_padding"
+            android:paddingEnd="@dimen/pairing_side_padding"
+            android:paddingBottom="@dimen/pairing_bottom_padding">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pairing_heading"
+                android:textColor="@color/dsh_text_primary"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/pairing_subtitle"
+                android:textColor="@color/dsh_text_secondary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/pairing_server_label"
+                android:textColor="@color/dsh_text_primary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/server_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:autofillHints=""
+                android:backgroundTint="@color/dsh_accent"
+                android:hint="@string/pairing_server_hint"
+                android:importantForAutofill="no"
+                android:imeOptions="actionNext"
+                android:inputType="textUri"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:textColor="@color/dsh_text_primary"
+                android:textColorHint="@color/dsh_text_secondary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/pairing_code_label"
+                android:textColor="@color/dsh_text_primary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/code_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:autofillHints=""
+                android:backgroundTint="@color/dsh_accent"
+                android:fontFamily="monospace"
+                android:hint="@string/pairing_code_hint"
+                android:importantForAutofill="no"
+                android:imeOptions="actionDone"
+                android:inputType="textCapCharacters|textNoSuggestions"
+                android:maxLength="8"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:textColor="@color/dsh_text_primary"
+                android:textColorHint="@color/dsh_text_secondary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/dsh_error"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/pairing_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="12dp"
+                android:indeterminate="true"
+                android:progressTint="@color/dsh_accent"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/connect_button"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/dsh_accent"
+                android:text="@string/pairing_connect"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/offline_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/pairing_offline"
+                android:textColor="@color/dsh_accent"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/pairing_help"
+                android:textColor="@color/dsh_text_secondary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/pairing_cleartext_note"
+                android:textColor="@color/dsh_warning_text"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

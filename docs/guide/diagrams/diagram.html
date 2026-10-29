@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>DSH Mobile — схемы</title>
+<style>
+  :root { --bg:#0f1218; --panel:#161b24; --panel2:#1b2230; --line:#2c3646; --text:#e9edf5; --muted:#93a0b5; --accent:#5b8dff; --accent2:#3ddc97; --warn:#ffb454; --danger:#ff6b6b; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--text); font-family:"Segoe UI", Arial, sans-serif; }
+  body { padding: 24px 28px; }
+  h1 { font-size: 22px; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 18px; }
+  .canvas { width:100%; }
+  text { font-family:"Segoe UI", Arial, sans-serif; }
+  .t { fill: var(--text); font-size: 15px; font-weight:600; }
+  .s { fill: var(--muted); font-size: 12.5px; }
+  .mono { font-family: Consolas, monospace; font-size: 12px; fill:#c9d6ef; }
+  .box { fill: var(--panel); stroke: var(--line); stroke-width:1.5; rx:14; }
+  .box2 { fill: var(--panel2); stroke:#3a4a63; stroke-width:1.5; rx:12; }
+  .accent { stroke: var(--accent); }
+  .ok { stroke: var(--accent2); }
+  .warn { stroke: var(--warn); }
+  .arrow { stroke:#7f93b3; stroke-width:1.8; fill:none; marker-end:url(#a); }
+  .arrow-accent { stroke:var(--accent); stroke-width:2; fill:none; marker-end:url(#ab); }
+  .arrow-ok { stroke:var(--accent2); stroke-width:2; fill:none; marker-end:url(#ag); }
+  .label { fill:#aab8cf; font-size:11.5px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const arrowDefs = `
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7f93b3"/></marker>
+  <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b8dff"/></marker>
+  <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3ddc97"/></marker>
+</defs>`;
+
+const diagrams = {
+  arch: {
+    title: 'Архитектура: телефон → LAN-шлюз плагина → сервисы DSH',
+    sub: 'PWA и API — один origin (порт 3081). Чтение идёт из durable-журнала; модель не вызывается.',
+    w: 1240, h: 720,
+    svg: `
+      <g transform="translate(20,20)">
+        <rect class="box2 accent" x="0" y="70" width="300" height="470"/>
+        <text class="t" x="20" y="100">Телефон / планшет</text>
+        <text class="s" x="20" y="122">Honor Magic V3 и аналоги</text>
+        <rect class="box" x="18" y="140" width="264" height="84"/>
+        <text class="t" x="34" y="168">PWA (web/)</text>
+        <text class="s" x="34" y="190">список · чат · SSE · IndexedDB</text>
+        <text class="s" x="34" y="208">раскладные: viewport segments</text>
+        <rect class="box" x="18" y="238" width="264" height="84"/>
+        <text class="t" x="34" y="266">APK-обёртка (android/)</text>
+        <text class="s" x="34" y="288">WebView · pairing · dshm://</text>
+        <text class="s" x="34" y="306">тот же PWA по LAN-URL</text>
+        <rect class="box" x="18" y="336" width="264" height="72"/>
+        <text class="t" x="34" y="362">Хранилище</text>
+        <text class="s" x="34" y="384">Bearer-токен · курсоры · кэш</text>
+      </g>
+
+      <g transform="translate(380,20)">
+        <rect class="box2 ok" x="0" y="70" width="360" height="470"/>
+        <text class="t" x="20" y="100">Плагин dsh-mobile (в процессе DSH)</text>
+        <text class="s" x="20" y="122">Cordis-плагин, ноль зависимостей</text>
+        <rect class="box" x="18" y="140" width="324" height="94"/>
+        <text class="t" x="34" y="166">LAN-listener :3081</text>
+        <text class="s" x="34" y="188">PWA + /api/v1 + SSE</text>
+        <text class="s" x="34" y="206">device-token · CORS · gzip/br · ETag</text>
+        <rect class="box" x="18" y="250" width="324" height="94"/>
+        <text class="t" x="34" y="276">Pairing /m/pair</text>
+        <text class="s" x="34" y="298">родной loopback-origin DSH</text>
+        <text class="s" x="34" y="316">cookie DSH · код 8 символов · TTL</text>
+        <rect class="box" x="18" y="360" width="324" height="150"/>
+        <text class="t" x="34" y="386">SessionBridge (in-process)</text>
+        <text class="s" x="34" y="408">история: observeSession (cold-safe)</text>
+        <text class="s" x="34" y="426">живое: session/event + assistant-stream</text>
+        <text class="s" x="34" y="444">prompt · cancel · queue · approvals</text>
+        <text class="s" x="34" y="462">0 вызовов модели при просмотре</text>
+      </g>
+
+      <g transform="translate(800,20)">
+        <rect class="box2" x="0" y="70" width="400" height="470"/>
+        <text class="t" x="20" y="100">Сервисы DSH (host)</text>
+        <text class="s" x="20" y="122">те же, что использует десктопный GUI</text>
+        <rect class="box" x="18" y="140" width="364" height="70"/>
+        <text class="t" x="34" y="166">sessionController</text>
+        <text class="s" x="34" y="188">list · page · prompt · cancel · updateQueue</text>
+        <rect class="box" x="18" y="224" width="364" height="70"/>
+        <text class="t" x="34" y="250">sessionQuery / projections</text>
+        <text class="s" x="34" y="272">observeSession · projection-кэш</text>
+        <rect class="box" x="18" y="308" width="364" height="70"/>
+        <text class="t" x="34" y="334">шина session/event</text>
+        <text class="s" x="34" y="356">durable-события с плотным seq</text>
+        <rect class="box" x="18" y="392" width="364" height="70"/>
+        <text class="t" x="34" y="418">approval / agents / jobs</text>
+        <text class="s" x="34" y="440">waterfall · статусы · фоновые задачи</text>
+        <rect class="box" x="18" y="476" width="364" height="46"/>
+        <text class="s" x="34" y="504">durable-журнал сессии: JSONL + zstd</text>
+      </g>
+
+      <path class="arrow-accent" d="M330 260 H 372"/>
+      <text class="label" x="336" y="250">Wi-Fi</text>
+      <text class="label" x="330" y="280">HTTPS/HTTP</text>
+      <path class="arrow-ok" d="M760 420 H 792"/>
+      <text class="label" x="748" y="410">in-process</text>
+    `,
+  },
+
+  pairing: {
+    title: 'Pairing: код показывается только на компьютере',
+    sub: 'Одноразовый код живёт 5 минут, 5 попыток, rate-limit по IP. LAN-порт код не отдаёт.',
+    w: 1180, h: 520,
+    svg: `
+      <g transform="translate(20,20)">
+        <rect class="box2" x="0" y="60" width="330" height="380"/>
+        <text class="t" x="20" y="92">1. Компьютер</text>
+        <text class="s" x="20" y="114">DSH открыт владельцем</text>
+        <rect class="box" x="18" y="132" width="294" height="130"/>
+        <text class="t" x="34" y="160">127.0.0.1:&lt;порт&gt;/m/pair</text>
+        <text class="s" x="34" y="184">Плагин на родном origin DSH</text>
+        <text class="s" x="34" y="204">cookie DSH · только loopback</text>
+        <text class="s" x="34" y="224">код + LAN-адреса + устройства</text>
+        <rect class="box" x="18" y="278" width="294" height="110"/>
+        <text class="t" x="34" y="306">Код: NB7W MBVR</text>
+        <text class="s" x="34" y="330">TTL 5 мин · одноразовый</text>
+        <text class="s" x="34" y="350">кнопки: новый код · отозвать</text>
+      </g>
+
+      <g transform="translate(390,20)">
+        <rect class="box2" x="0" y="60" width="330" height="380"/>
+        <text class="t" x="20" y="92">2. Телефон</text>
+        <text class="s" x="20" y="114">PWA или APK</text>
+        <rect class="box" x="18" y="132" width="294" height="120"/>
+        <text class="t" x="34" y="160">Адрес + код</text>
+        <text class="s" x="34" y="184">http://192.168.1.10:3081</text>
+        <text class="s" x="34" y="204">или dshm://pair?url=…&amp;code=…</text>
+        <text class="s" x="34" y="224">(ссылка из QR)</text>
+        <rect class="box" x="18" y="272" width="294" height="112"/>
+        <text class="t" x="34" y="300">POST /api/v1/pair</text>
+        <text class="s" x="34" y="324">{ code, deviceName, platform }</text>
+        <text class="s" x="34" y="344">→ { deviceToken, deviceId }</text>
+      </g>
+
+      <g transform="translate(760,20)">
+        <rect class="box2 ok" x="0" y="60" width="380" height="380"/>
+        <text class="t" x="20" y="92">3. Что происходит на сервере</text>
+        <rect class="box" x="18" y="116" width="344" height="64"/>
+        <text class="t" x="34" y="142">Проверка кода</text>
+        <text class="s" x="34" y="164">TTL · попытки · rate-limit по IP</text>
+        <rect class="box" x="18" y="194" width="344" height="64"/>
+        <text class="t" x="34" y="220">Выдача токена</text>
+        <text class="s" x="34" y="242">32 байта; в файле только SHA-256</text>
+        <rect class="box" x="18" y="272" width="344" height="64"/>
+        <text class="t" x="34" y="298">Код сгорает</text>
+        <text class="s" x="34" y="320">повторная привязка — только новым</text>
+        <rect class="box" x="18" y="350" width="344" height="66"/>
+        <text class="t" x="34" y="376">Отзыв доступа</text>
+        <text class="s" x="34" y="398">/m/pair → «Отозвать»</text>
+      </g>
+
+      <path class="arrow" d="M345 240 H 385"/>
+      <path class="arrow" d="M715 330 H 750"/>
+      <text class="label" x="352" y="230">код</text>
+      <text class="label" x="705" y="318">pair</text>
+    `,
+  },
+
+  sync: {
+    title: 'Синхронизация: курсор, дельты, догон после обрыва',
+    sub: 'Клиент хранит последний seq. Повторный вход — только пропущенные события; при разрыве плотности — resync.',
+    w: 1240, h: 620,
+    svg: `
+      <g transform="translate(30,30)">
+        <line x1="40" y1="120" x2="1160" y2="120" stroke="#33405a" stroke-width="2"/>
+        <text class="s" x="40" y="104">durable-журнал сессии (seq 0 … N)</text>
+
+        <rect class="box accent" x="60" y="150" width="250" height="96"/>
+        <text class="t" x="78" y="178">GET /sessions/{id}</text>
+        <text class="s" x="78" y="200">окно: ~35 событий</text>
+        <text class="s" x="78" y="220">cursor = 389</text>
+
+        <rect class="box ok" x="360" y="150" width="290" height="96"/>
+        <text class="t" x="378" y="178">GET …/stream?cursor=389</text>
+        <text class="s" x="378" y="200">hello → delta 390…N</text>
+        <text class="s" x="378" y="220">live:* — транзиентный текст</text>
+
+        <rect class="box warn" x="700" y="150" width="250" height="96"/>
+        <text class="t" x="718" y="178">обрыв связи</text>
+        <text class="s" x="718" y="200">курсор сохранён в IDB</text>
+        <text class="s" x="718" y="220">страница свернулась</text>
+
+        <rect class="box ok" x="960" y="150" width="200" height="96"/>
+        <text class="t" x="978" y="178">повтор</text>
+        <text class="s" x="978" y="200">cursor = N</text>
+        <text class="s" x="978" y="220">только дельты</text>
+
+        <rect class="box" x="360" y="320" width="620" height="150"/>
+        <text class="t" x="380" y="350">Кадры SSE</text>
+        <text class="mono" x="380" y="378">hello  { sessionId, cursor, running }</text>
+        <text class="mono" x="380" y="400">delta  { from, events:[{seq,t,k,d}] }</text>
+        <text class="mono" x="380" y="422">live   { attemptId, revision, text }</text>
+        <text class="mono" x="380" y="444">state / approval / ping / resync</text>
+
+        <rect class="box" x="60" y="320" width="250" height="150"/>
+        <text class="t" x="78" y="350">Экономия</text>
+        <text class="s" x="78" y="376">список: ~1 КБ gzip</text>
+        <text class="s" x="78" y="398">открытие: 4.3 КБ gzip</text>
+        <text class="s" x="78" y="420">дельта хода: ≤ 8 КБ</text>
+        <text class="s" x="78" y="442">токенов: 0</text>
+
+        <path class="arrow-accent" d="M312 198 H 352"/>
+        <path class="arrow-ok" d="M652 198 H 692"/>
+        <path class="arrow" d="M950 198 H 954"/>
+      </g>
+    `,
+  },
+
+  foldable: {
+    title: 'Раскладные устройства: одна разметка, две позы',
+    sub: 'Posture меняет только CSS Grid; SSE, черновик и скролл не пересоздаются.',
+    w: 1240, h: 680,
+    svg: `
+      <g transform="translate(30,30)">
+        <text class="t" x="0" y="30">Сложен (внешний экран)</text>
+        <rect class="box2" x="0" y="50" width="250" height="470"/>
+        <rect class="box" x="22" y="80" width="206" height="64"/>
+        <text class="s" x="38" y="118">шапка · сессии</text>
+        <rect class="box" x="22" y="160" width="206" height="290"/>
+        <text class="s" x="38" y="196">одна панель:</text>
+        <text class="s" x="38" y="218">список ↔ чат</text>
+        <text class="s" x="38" y="240">(навигация назад)</text>
+        <rect class="box" x="22" y="466" width="206" height="40"/>
+        <text class="s" x="38" y="492">composer + safe-area</text>
+        <text class="s" x="22" y="545">1 сегмент · slide-навигация</text>
+      </g>
+
+      <g transform="translate(340,30)">
+        <text class="t" x="0" y="30">Раскрыт (внутренний экран)</text>
+        <rect class="box2 accent" x="0" y="50" width="620" height="470"/>
+        <rect class="box" x="22" y="80" width="230" height="410"/>
+        <text class="s" x="38" y="116">сессии · поиск</text>
+        <rect x="252" y="50" width="24" height="470" fill="#0b0f16"/>
+        <text class="s" x="258" y="300" transform="rotate(90 262,300)">шов</text>
+        <rect class="box" x="276" y="80" width="322" height="410"/>
+        <text class="s" x="292" y="116">чат · стриминг · approvals</text>
+        <text class="s" x="22" y="545">2 сегмента · hinge-gutter 16–48 px</text>
+      </g>
+
+      <g transform="translate(1010,80)">
+        <text class="t" x="0" y="0">CSS-механика</text>
+        <text class="mono" x="0" y="34">@media (horizontal-</text>
+        <text class="mono" x="0" y="54">  viewport-segments: 2)</text>
+        <text class="mono" x="0" y="84">env(viewport-segment-</text>
+        <text class="mono" x="0" y="104">  width 0 0)</text>
+        <text class="mono" x="0" y="134">env(viewport-segment-</text>
+        <text class="mono" x="0" y="154">  left 1 0)</text>
+        <text class="mono" x="0" y="184">@media (spanning:</text>
+        <text class="mono" x="0" y="204">  single-fold-vertical)</text>
+        <text class="s" x="0" y="244">≥840dp — постоянный rail</text>
+        <text class="s" x="0" y="266">смена позы ≠ перезагрузка</text>
+      </g>
+    `,
+  },
+
+  install: {
+    title: 'Установка за пять шагов',
+    sub: 'Плагин — локальный пакет; после установки DSH перезапускается один раз.',
+    w: 1180, h: 400,
+    svg: `
+      <g transform="translate(30,30)">
+        <rect class="box" x="0" y="40" width="200" height="150"/>
+        <text class="t" x="18" y="70">1. Закрыть DSH</text>
+        <text class="s" x="18" y="96">полностью, включая трей</text>
+        <rect class="box" x="240" y="40" width="220" height="150"/>
+        <text class="t" x="258" y="70">2. Установить пакет</text>
+        <text class="s" x="258" y="96">dsh plugin add</text>
+        <text class="s" x="258" y="116">link:…/packages/dsh-mobile</text>
+        <rect class="box" x="500" y="40" width="200" height="150"/>
+        <text class="t" x="518" y="70">3. Запустить DSH</text>
+        <text class="s" x="518" y="96">плагин поднимет :3081</text>
+        <text class="s" x="518" y="116">и страницу /m/pair</text>
+        <rect class="box" x="740" y="40" width="200" height="150"/>
+        <text class="t" x="758" y="70">4. Открыть /m/pair</text>
+        <text class="s" x="758" y="96">на ПК: код + адрес</text>
+        <rect class="box ok" x="980" y="40" width="160" height="150"/>
+        <text class="t" x="998" y="70">5. Спарить</text>
+        <text class="s" x="998" y="96">телефон → сессии</text>
+        <path class="arrow" d="M204 115 H 236"/>
+        <path class="arrow" d="M464 115 H 496"/>
+        <path class="arrow" d="M704 115 H 736"/>
+        <path class="arrow" d="M944 115 H 976"/>
+      </g>
+    `,
+  },
+};
+
+const key = new URLSearchParams(location.search).get('d') || 'arch';
+const diagram = diagrams[key] || diagrams.arch;
+document.title = diagram.title;
+document.getElementById('root').innerHTML = `
+  <h1>${diagram.title}</h1>
+  <p class="sub">${diagram.sub}</p>
+  <svg class="canvas" width="${diagram.w}" height="${diagram.h}" viewBox="0 0 ${diagram.w} ${diagram.h}" xmlns="http://www.w3.org/2000/svg">
+    ${arrowDefs}
+    ${diagram.svg}
+  </svg>`;
+</script>
+</body>
+</html>

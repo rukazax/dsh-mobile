@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark, flat theme: the wrapper is only chrome around the PWA.
+         There is no AppCompat dependency, so the platform Material theme is used. -->
+    <style name="Theme.DshMobile" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/dsh_background</item>
+        <item name="android:colorPrimary">@color/dsh_accent</item>
+        <item name="android:colorPrimaryDark">@color/dsh_background</item>
+        <item name="android:colorAccent">@color/dsh_accent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- API 27+ items live in values-v27/themes.xml. -->
+    </style>
+</resources>
